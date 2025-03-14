@@ -1,0 +1,23 @@
+{% extends 'Match_Ready/base.html' %}
+
+{% block title_block %}
+    Sign Up
+{% endblock %}
+
+
+{% block body_block %}
+<h1>Sign Up</h1>
+
+<div>
+    <form id="signup" method="post" action="{% url 'Match_Ready:login' %}">
+        {% csrf_token %}
+        Name: <input type="text" name="signup_name" size="50" /><br />
+        Password: <input type="signup_password" name="password" size="50" /><br />
+        <input type="submit" value="submit" />
+    </form>
+
+</div>
+
+<p>Already a member then go <a href="{% url 'Match_Ready:login' %}">Login!!!!</a></p>
+
+{% endblock %}

@@ -1,0 +1,93 @@
+#navbar {
+    background-color: #333;
+    padding: 10px 0;
+}
+
+#nav-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+#nav-list li {
+    margin: 0 15px;
+}
+
+#nav-list li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px 15px;
+    transition: background-color 0.3s;
+}
+
+#nav-list li a:hover {
+    background-color: #555;
+}
+
+#sidebar {
+    width: 200px;
+    height: 100vh;
+    background-color: #f4f4f4;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 60px;
+}
+
+#sidebar-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#sidebar-list li {
+    margin: 15px;
+}
+
+#sidebar-list li a {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 20px;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+#sidebar-list li a:hover {
+    background-color: #ddd;
+}
+
+#main-content {
+    margin-left: 200px;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#footer {
+    margin-top: auto;
+    display: flex;
+    padding: 20px;
+    border-top: 1px solid #ccc;
+}
+
+#contact-info {
+    flex: 1;
+}
+
+#external-links {
+    flex: 1;
+    text-align: right;
+}
+
+#external-links ul {
+    list-style-type: none;
+}
+
+#external-links ul li {
+    margin: 5px;
+}

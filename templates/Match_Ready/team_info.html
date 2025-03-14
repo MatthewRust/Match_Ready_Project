@@ -1,0 +1,42 @@
+{% extends 'Match_Ready/base.html' %}
+
+{% block title_block %} <!-- Logic for teams goes here -->
+    My Team - {{ team.name }}
+{% endblock %}
+
+
+{% block body_block %}
+
+{% if team %}
+
+    <h1>Table Of teams </h1>
+    <div>
+        <table>
+            <tr>
+                <td>Match</td>
+                <td>Date/time</td>
+                <td>Location</td>
+                <td>Players</td>
+
+
+            </tr>
+
+            {% for team in teams %}
+
+                <tr>
+                    <td>{{ team.Match }}</td>
+                    <td>{{ team.Time }}</td>
+                    <td>{{ team.Location }}</td>
+                    <td>{{ team.Players }}</td>
+                    
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+{% else %}
+    <h2>You are not apart of any team</h2>
+{% endif %}
+
+{% endblock %}

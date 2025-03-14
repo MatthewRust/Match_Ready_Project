@@ -1,0 +1,28 @@
+{% extends 'Match_Ready/base.html' %}
+
+{% block title_block %}
+    Make a Team
+{% endblock %}
+
+
+{% block body_block %}
+
+<h1>Make a new team</h1>
+
+<div>
+    <form id="new_team_form" method="post" action="{% url 'Match_Ready:make_team' %}">
+        {% csrf_token %}
+        Team Name: <input type="text" name="team_name" size="50" /><br />
+        Location: <input type="text" name="team_location" size="50" /><br />
+        Description: <input type="text" name="team_description" size="50" /><br />
+        Sport: <input type="text" name="team_sport" size="50" /><br />
+        <input type="submit" value="submit" />
+    </form>
+</div>
+{% endblock %}
+
+
+
+
+
+
