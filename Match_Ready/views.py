@@ -5,33 +5,27 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
-#Assumptions - 
-# announcements is a simple model with a stack field so we can pop off the latest announcements
-# matches might have to have a datetime field and be an object for a specific match
-# matches could also have a deque datatype and when a match is played it gets removed
 
-#make these models, player, fan and coach could all be subclasses of a base
 
-from MatchReady.models import Team, User, Player, Fan, Coach, TeamSheet, Match
+from Match_Ready.models import Team, User, Player, Fan, Coach, TeamSheet, Match, Announcement
 
-#make these forms, player, fan and coach form could all be subclasses of a base
-from MatchReady.forms import NewTeamForm, FindTeamForm, PlayerForm, FanForm, CoachForm, UserProfileForm, AnnouncementForm
+from Match_Ready.forms import NewTeamForm, FindTeamForm, PlayerForm, FanForm, CoachForm, UserProfileForm, AnnouncementForm
 
 def home (request):
-    return render(request, 'MatchReady/home.html')
+    return render(request, 'Match_Ready/home.html')
 
 def about (request):
-    return render(request, 'MatchReady/about.html')
+    return render(request, 'Match_Ready/about.html')
 
 def contact(request):
-    return render(request,'MatchReady/contact.html')
+    return render(request,'Match_Ready/contact.html')
 
 def user_register(request, user_type):
     registered = False
     form_types = {'player_form':PlayerForm,'coach_form':CoachForm,'fan_form':FanForm}
 
     if user_type not in form_types:
-        return render(request, 'MatchReady/register.html', {'error': 'Not a valid user type'})
+        return render(request, 'Match_Ready/register.html', {'error': 'Not a valid user type'})
     
     selected_form = form_types[user_type]
     if request.method == 'POST':
@@ -44,7 +38,7 @@ def user_register(request, user_type):
         user_form = selected_form()
         profile_form = UserProfileForm()
 
-    return render(request, 'MatchReady/register.html', {
+    return render(request, 'Match_Ready/register.html', {
         'user_form': user_form,
         'profile_form': profile_form,
         'registered': registered,
@@ -75,44 +69,38 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return redirect(reverse('MatchReady:home'))
+                return redirect(reverse('Match_Ready:home'))
             else:
-                return HttpResponse("Your MatchReady account is disabled.")
+                return HttpResponse("Your Match_Ready account is disabled.")
         else:
             print(f"Invalid login details: {username}, {password}")
             return HttpResponse("Invalid login details supplied.")
     else:
-        return render(request, 'MatchReady/login.html')
+        return render(request, 'Match_Ready/login.html')
     
 @login_required
 def user_logout(request):
     logout(request)
-    return redirect(reverse('MatchReady:home'))
+    return redirect(reverse('Match_Ready:home'))
 
 def display_matches(request):
-    #next_matches = Match.objects.filter(finished=False).orderby('match_day')[:15]
-
-    #for x in range 15:
-    #   next_matches.append(Match.objects.all().deque.frontDequeue())
-    #for x in range 15:
-    #   Match.objects.all().deque.frontQueue(next_matches[x])
-
+    next_matches = Match.objects.filter(finished=False).orderby('match_day')[:15]
     context_dict = {'upcoming_matches':next_matches}
-    return render(request,'MatchReady/matches.html',context=context_dict)
+    return render(request,'Match_Ready/matches.html',context=context_dict)
 
 @login_required
 def my_team(request,user_id):
     user = User.objects.get(id=user_id)
     teams = User.teams.all()
     context_dict = {'teams':teams}
-    return render(request,'MatchReady/my_team.html',context=context_dict)
+    return render(request,'Match_Ready/my_team.html',context=context_dict)
 
 @login_required
 def find_team(request,user_id):
     user = get_object_or_404(User,id=user_id)
 
     if user is None:
-        return redirect(reverse('MatchReady:home'))
+        return redirect(reverse('Match_Ready:home'))
     
     form = FindTeamForm()
 
@@ -124,13 +112,13 @@ def find_team(request,user_id):
                 try:
                     team = Team.objects.get(id=team_id)  # Fetch the team instance
                     user.teams.add(team)
-                    return redirect(reverse('MatchReady:my_team',kwargs={'user_id':user_id}))
+                    return redirect(reverse('Match_Ready:my_team',kwargs={'user_id':user_id}))
                 except Team.DoesNotExist:
                     return HttpResponse("Team ID is incorrect")
             else:
                 print(form.errors)
     context_dict = {'form':form,'user':user}
-    return render(request,'MatchReady/find_team.html',context=context_dict)
+    return render(request,'Match_Ready/find_team.html',context=context_dict)
 
 @login_required
 def create_team(request):
@@ -143,11 +131,11 @@ def create_team(request):
                 team = team_form.save()
                 team.save()
                 registered = True
-                return redirect(reverse('MatchReady:home'))
+                return redirect(reverse('Match_Ready:home'))
 
     else:
         user_form = NewTeamForm()
-    return render(request,'MatchReady/create_team.html',context=context_dict)
+    return render(request,'Match_Ready/create_team.html',context=context_dict)
 
 @login_required
 def create_announcement(request,team_id):
@@ -157,7 +145,7 @@ def create_announcement(request,team_id):
         team = None
 
     if team is None:
-        return redirect(reverse('MatchReady:home'))
+        return redirect(reverse('Match_Ready:home'))
     
     form = AnnouncementForm()
     
@@ -165,11 +153,11 @@ def create_announcement(request,team_id):
         form = AnnouncementForm(request.POST)
         if form.is_valid():
             form.save(commit=True)
-            return redirect(reverse('MatchReady:home'))
+            return redirect(reverse('Match_Ready:home'))
         else:
             print(form.errors)
-            return render(request, "MatchReady/create_announcements.html", {"form": form, "errors": form.errors})  
-    return render(request, 'MatchReady/create_announcements.html',{'form':form}) 
+            return render(request, "Match_Ready/create_announcements.html", {"form": form, "errors": form.errors})  
+    return render(request, 'Match_Ready/create_announcements.html',{'form':form}) 
 
 @login_required
 def team_info(request, team_id):
@@ -177,13 +165,13 @@ def team_info(request, team_id):
     context_dict = {'team_detail':'pass'}
     #
     #
-    return render(request,'MatchReady/team_detail.html',context=context_dict)
+    return render(request,'Match_Ready/team_detail.html',context=context_dict)
 
 @login_required
 def announcements(request, team_id):
-    announcements = Announcements.objects.get(id=team_id)
-    
-    return render(request,'MatchReady/announcements.html',context=context_dict)
+    announcements = Announcement.objects.filter(id=team_id).order_by('post_date')[:10]
+    context_dict={'announcements':announcements}
+    return render(request,'Match_Ready/announcements.html',context=context_dict)
  
 
 
@@ -202,7 +190,7 @@ def add_page(request, category_name_slug):
         category=None
 
     if category is None:
-        return redirect(reverse('MatchReady:home'))
+        return redirect(reverse('Match_Ready:home'))
     
     form = PageForm()
 
@@ -214,11 +202,11 @@ def add_page(request, category_name_slug):
                 page.category = category
                 page.views = 0
                 page.save()
-                return redirect(reverse('MatchReady:show_category',kwargs={'category_name_slug':category_name_slug}))
+                return redirect(reverse('Match_Ready:show_category',kwargs={'category_name_slug':category_name_slug}))
             else:
                 print(form.errors)
     context_dict = {'form': form,'category': category}
-    return render(request, 'MatchReady/add_page.html', context=context_dict)
+    return render(request, 'Match_Ready/add_page.html', context=context_dict)
 
 
 def show_category(request, category_name_slug):
@@ -232,7 +220,7 @@ def show_category(request, category_name_slug):
     except Category.DoesNotExist:
         context_dict['pages']=None
         context_dict['category']=None
-    return render(request, 'MatchReady/category.html', context=context_dict)
+    return render(request, 'Match_Ready/category.html', context=context_dict)
 
 @login_required
 def add_category(request):
@@ -242,8 +230,8 @@ def add_category(request):
         form = CategoryForm(request.POST)
         if form.is_valid():
             form.save(commit=True)
-            return redirect(reverse('MatchReady:home'))
+            return redirect(reverse('Match_Ready:home'))
         else:
             print(form.errors)
-            return render(request, "MatchReady/add_category.html", {"form": form, "errors": form.errors})  
-    return render(request, 'MatchReady/add_category.html',{'form':form}) 
+            return render(request, "Match_Ready/add_category.html", {"form": form, "errors": form.errors})  
+    return render(request, 'Match_Ready/add_category.html',{'form':form}) 
