@@ -15,7 +15,7 @@ class Team(models.Model):
     def __str__(self):
         return self.name
     
-class Manager(User):
+class Coach(User):
     team = models.OneToOneField(Team, on_delete=models.CASCADE, related_name="manager")
 
 class Player(User):
@@ -31,4 +31,5 @@ class Match(models.Model):
 
     def __str__(self):
         return f"{self.team1.name} vs {self.team2.name} on {self.match_date.strftime('%Y-%m-%d %H:%M')}"
+
 

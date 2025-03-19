@@ -19,7 +19,7 @@ from Match_Ready import views
 from django.urls import include
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    #path('', views.index, name='index'),
     path('admin/', admin.site.urls),
     path('Match_Ready/', include('Match_Ready.urls'))
 ]
