@@ -8,7 +8,7 @@ from django.contrib import admin
 app_name = 'Match_Ready'
 
 urlpatterns = [
-    #path('', views.index, name ='index'),
+    path('', views.index, name ='index'),
     path('about/', views.about, name='about'),
     path('announcements/', views.announcements, name='announcements'),
     path('create_team/', views.create_team, name='create_team'),

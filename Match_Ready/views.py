@@ -11,8 +11,8 @@ from Match_Ready.models import Team, User, Player, Fan, Coach, Match #Team sheet
 
 #from Match_Ready.forms import NewTeamForm, FindTeamForm, PlayerForm, FanForm, CoachForm, UserProfileForm, AnnouncementForm
 
-def home (request):
-    return render(request, 'Match_Ready/home.html')
+def index (request):
+    return render(request, 'Match_Ready/index.html')
 
 def about (request):
     return render(request, 'Match_Ready/about.html')
