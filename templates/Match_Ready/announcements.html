@@ -11,7 +11,14 @@
     {% if teamsheet %}
     <h2>Up coming matches are: </h2>
 
-    
+    {% else %}
+    <h2>There are no upcoming matches at the moment</h2>
+        {% if coach %}
+            <p>Check back later to see any changes or if you are a coach add a new match <a href="{% url 'Match_Ready:add_match' %}">here</a></p>
+        {% else %}
+            <p></p>
+        {% endif %}
+    {% endif %}
 
 
 
