@@ -4,12 +4,12 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from django.db.models import Q
 
 
+from Match_Ready.models import User, Player,Coach, Match, Team
 
-from Match_Ready.models import Team, User, Player, Fan, Coach, Match #Team sheets, announcements
-
-#from Match_Ready.forms import NewTeamForm, FindTeamForm, PlayerForm, FanForm, CoachForm, UserProfileForm, AnnouncementForm
+from Match_Ready.forms import NewTeamForm, FindTeamForm, UserForm
 
 def index (request):
     return render(request, 'Match_Ready/index.html')
@@ -20,42 +20,27 @@ def about (request):
 def contact(request):
     return render(request,'Match_Ready/contact.html')
 
-def user_register(request, user_type):
+def user_register(request):
     registered = False
-    form_types = {'player_form':PlayerForm,'coach_form':CoachForm,'fan_form':FanForm}
-
-    if user_type not in form_types:
-        return render(request, 'Match_Ready/register.html', {'error': 'Not a valid user type'})
     
-    selected_form = form_types[user_type]
     if request.method == 'POST':
-        user_form = selected_form(request.POST)
-        profile_form = UserProfileForm(request.POST)
+        print("--------post---------")
+        user_form = UserForm(request.POST)
 
-        if user_form.is_valid() and profile_form.is_valid():
-            registered = register(request, profile_form, user_form)
+        if user_form.is_valid():
+            print("--------is valid----------")
+            registered = register(request, user_form)
     else:
-        user_form = selected_form()
-        profile_form = UserProfileForm()
+        user_form = UserForm()
 
-    return render(request, 'Match_Ready/register.html', {
+    return render(request, 'Match_Ready/signup.html', {
         'user_form': user_form,
-        'profile_form': profile_form,
-        'registered': registered,
-        'user_type': user_type  
+        'registered': registered
     })
 
-def register(request, profile_form,user_form):
+def register(request, user_form):
     user = user_form.save()
     user.save()
-
-    profile = profile_form.save(commit=False)
-    profile.user = user
-
-    if 'picture' in request.FILES:
-        profile.picture = request.FILES['picture']
-    
-    profile.save()
 
     return True
 
@@ -66,7 +51,7 @@ def user_login(request):
 
         user = authenticate(username=username, password=password)
 
-        if user:
+        if user is not None:
             if user.is_active:
                 login(request, user)
                 return redirect(reverse('Match_Ready:home'))
@@ -83,16 +68,17 @@ def user_logout(request):
     logout(request)
     return redirect(reverse('Match_Ready:home'))
 
-def display_matches(request):
-    next_matches = Match.objects.filter(finished=False).orderby('match_day')[:15]
-    context_dict = {'upcoming_matches':next_matches}
+def fixtures(request):
+    now = datetime.now()
+    fixtures = Match.objects.filter(match_date__gte=now).order_by('match_date')[:15]
+    context_dict = {'upcoming_matches':fixtures}
     return render(request,'Match_Ready/matches.html',context=context_dict)
 
 @login_required
 def my_team(request,user_id):
     user = User.objects.get(id=user_id)
-    teams = User.teams.all()
-    context_dict = {'teams':teams}
+    team = user.team.all()
+    context_dict = {'team':team}
     return render(request,'Match_Ready/my_team.html',context=context_dict)
 
 @login_required
@@ -137,101 +123,38 @@ def create_team(request):
         user_form = NewTeamForm()
     return render(request,'Match_Ready/create_team.html',context=context_dict)
 
-@login_required
-def create_announcement(request,team_id):
-    try:
-        team = Team.objects.get(id=team_id)
-    except Team.DoesNotExist:
-        team = None
+#@login_required
+#def create_announcement(request,team_id):
+ #   try:
+  #      team = Team.objects.get(id=team_id)
+   # except Team.DoesNotExist:
+    #    team = None
 
-    if team is None:
-        return redirect(reverse('Match_Ready:home'))
+    #if team is None:
+     #   return redirect(reverse('Match_Ready:home'))
     
-    form = AnnouncementForm()
+   # form = AnnouncementForm()
     
-    if request.method == 'POST':
-        form = AnnouncementForm(request.POST)
-        if form.is_valid():
-            form.save(commit=True)
-            return redirect(reverse('Match_Ready:home'))
-        else:
-            print(form.errors)
-            return render(request, "Match_Ready/create_announcements.html", {"form": form, "errors": form.errors})  
-    return render(request, 'Match_Ready/create_announcements.html',{'form':form}) 
+    #if request.method == 'POST':
+     #   form = AnnouncementForm(request.POST)
+      #  if form.is_valid():
+       #     form.save(commit=True)
+        #    return redirect(reverse('Match_Ready:home'))
+        #else:
+         #   print(form.errors)
+          #  return render(request, "Match_Ready/create_announcements.html", {"form": form, "errors": form.errors})  
+    #return render(request, 'Match_Ready/create_announcements.html',{'form':form}) 
 
 @login_required
 def team_info(request, team_id):
     team = Team.objects.get(id=team_id)
-    context_dict = {'team_detail':'pass'}
-    #
-    #
+    players = Player.objects.filter(team_id=team_id)
+    context_dict = {'players':players}
     return render(request,'Match_Ready/team_detail.html',context=context_dict)
 
 @login_required
-def announcements(request, team_id):
-    announcements = Announcement.objects.filter(id=team_id).order_by('post_date')[:10]
-    context_dict={'announcements':announcements}
+def team_fixtures(request, team_id):
+    now = datetime.now()
+    team_fixtures = Match.objects.filter(Q(team1__id=team_id) | Q(team2__id=team_id),match_date__gte=now).order_by('match_date')[:10]    
+    context_dict={'team_fixtures':team_fixtures}
     return render(request,'Match_Ready/announcements.html',context=context_dict)
- 
-
-
-
-
-
-
-
-
-
-@login_required
-def add_page(request, category_name_slug):
-    try:
-        category = Category.objects.get(slug=category_name_slug)
-    except Category.DoesNotExist:
-        category=None
-
-    if category is None:
-        return redirect(reverse('Match_Ready:home'))
-    
-    form = PageForm()
-
-    if request.method == 'POST':
-        form = PageForm(request.POST)
-        if form.is_valid():
-            if category:
-                page = form.save(commit=False)
-                page.category = category
-                page.views = 0
-                page.save()
-                return redirect(reverse('Match_Ready:show_category',kwargs={'category_name_slug':category_name_slug}))
-            else:
-                print(form.errors)
-    context_dict = {'form': form,'category': category}
-    return render(request, 'Match_Ready/add_page.html', context=context_dict)
-
-
-def show_category(request, category_name_slug):
-    context_dict={}
-
-    try:
-        category = Category.objects.get(slug=category_name_slug)
-        pages = Page.objects.filter(category=category)
-        context_dict['pages'] = pages
-        context_dict['category'] = category
-    except Category.DoesNotExist:
-        context_dict['pages']=None
-        context_dict['category']=None
-    return render(request, 'Match_Ready/category.html', context=context_dict)
-
-@login_required
-def add_category(request):
-    form = CategoryForm()
-    
-    if request.method == 'POST':
-        form = CategoryForm(request.POST)
-        if form.is_valid():
-            form.save(commit=True)
-            return redirect(reverse('Match_Ready:home'))
-        else:
-            print(form.errors)
-            return render(request, "Match_Ready/add_category.html", {"form": form, "errors": form.errors})  
-    return render(request, 'Match_Ready/add_category.html',{'form':form}) 

@@ -4,7 +4,7 @@ from .models import User, Player, Fan, Team, Coach, Match
 
 
 class UserForm(forms.ModelForm):
-    username = forms.CharField(max_length=128, unique = False)
+    username = forms.CharField(max_length=128)
     password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
@@ -14,7 +14,7 @@ class UserForm(forms.ModelForm):
 
 
 class NewTeamForm(forms.ModelForm):
-    name = forms.CharField(max_length=128, unique = True)
+    name = forms.CharField(max_length=128)
     #not sure if team_id is auto incrementing and if so and input would not be required
     class Meta:
         model = Team
@@ -53,17 +53,17 @@ class FindTeamForm(forms.ModelForm):
     teamID = forms.IntegerField()
     class Meta:
         model = Team
-        fields = ('teamID')
+        fields = ('teamID',)
 
 
 
 
-class AnnouncementForm(forms.ModelForm):
-    teamID = forms.IntegerField()
-    info = forms.CharField()
-    class Meta:
-        model = Announcement
-        fields = ('teamID', 'info')
+#class AnnouncementForm(forms.ModelForm):
+ #   teamID = forms.IntegerField()
+  #  info = forms.CharField()
+   # class Meta:
+    #    model = Announcement
+     #   fields = ('teamID', 'info')
 
 
 
