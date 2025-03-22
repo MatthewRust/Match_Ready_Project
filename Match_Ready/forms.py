@@ -6,6 +6,12 @@ from .models import User, Player, Fan, Team, Coach, Match
 class UserForm(forms.ModelForm):
     username = forms.CharField(max_length=128)
     password = forms.CharField(widget=forms.PasswordInput())
+    ROLE_CHOICES = [
+        ('player', 'Player'),
+        ('coach', 'Coach'),
+        ('fan','Fan'),
+    ]
+    role = forms.ChoiceField(choices=ROLE_CHOICES, widget=forms.RadioSelect)
 
     class Meta:
         model = User

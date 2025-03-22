@@ -7,7 +7,7 @@ from datetime import datetime
 from django.db.models import Q
 
 
-from Match_Ready.models import User, Player,Coach, Match, Team
+from Match_Ready.models import User,Fan, Player,Coach, Match, Team
 
 from Match_Ready.forms import NewTeamForm, FindTeamForm, UserForm
 
@@ -24,25 +24,32 @@ def user_register(request):
     registered = False
     
     if request.method == 'POST':
-        print("--------post---------")
         user_form = UserForm(request.POST)
 
         if user_form.is_valid():
-            print("--------is valid----------")
-            registered = register(request, user_form)
+            username = user_form.cleaned_data['username']
+            password = user_form.cleaned_data['password']
+
+            if user_form.cleaned_data['role'] == 'player':
+                user = Player(username=username)
+            elif user_form.cleaned_data['role'] == 'coach':
+                user = Coach(username=username)
+            elif user_form.cleaned_data['role'] == 'fan':
+                user = Fan(username=username)
+
+            user.set_password(password)
+            user.save()
+
+            return redirect('Match_Ready:login')
     else:
         user_form = UserForm()
 
     return render(request, 'Match_Ready/signup.html', {
-        'user_form': user_form,
+        'form': user_form,
         'registered': registered
     })
 
-def register(request, user_form):
-    user = user_form.save()
-    user.save()
 
-    return True
 
 def user_login(request):
     if request.method=='POST':
