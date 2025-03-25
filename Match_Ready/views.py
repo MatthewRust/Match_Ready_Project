@@ -9,7 +9,7 @@ from datetime import datetime
 
 from Match_Ready.models import User,Fan, Player,Coach, Match, Team #Team sheets, announcements
 
-#from Match_Ready.forms import NewTeamForm, FindTeamForm, PlayerForm, FanForm, CoachForm, UserProfileForm, AnnouncementForm
+from Match_Ready.forms import UserForm, FindTeamForm, NewTeamForm, AddMatch
 
 def index (request):
     return render(request, 'Match_Ready/index.html')
