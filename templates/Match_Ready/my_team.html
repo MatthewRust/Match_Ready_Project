@@ -8,10 +8,9 @@
 {% block body_block %}
 
 <h1>My Team</h1>
-<div>
-    <ul> <!-- for loop for getting to the page bout -->
-        <li></li>
-    </ul>
+<div> 
+    <a href="{% url 'Match_Ready:ListOfPeople' %}">People in your team</a>
+    <a href="{% url 'Match_Ready:UpcomingMatches' %}">Upcoming Matches</a>
 </div>
 
 {% endblock %}

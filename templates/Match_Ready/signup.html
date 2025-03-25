@@ -7,27 +7,23 @@
 
 {% block body_block %}
 <h1>Sign Up</h1>
-
-<div>
-    <form id="signup" method="post" action="{% url 'Match_Ready:signup' %}">
-        {% csrf_token %}
-        {{ form.username.label_tag }}<br>
-        {{ form.username }}<br><br>
-
-        {{ form.password.label_tag }}<br>
-        {{ form.password }}<br><br>
-
-        {{ form.role.label_tag }}
-        {% for radio in form.role %}
-            <div style="margin-bottom: 5px;">
-                {{ radio.tag }} {{ radio.choice_label }}
-            </div>
-        {% endfor %}
-        <input type="submit" value="Submit" />
-    </form>
-
-</div>
-
-<p>Already a member then go <a href="{% url 'Match_Ready:login' %}">Login!!!!</a></p>
-
-{% endblock %}
+ 
+ <div>
+     <form id="signup" method="post" action="{% url 'Match_Ready:signup' %}">
+         {% csrf_token %}
+         {{ form.username.label_tag }}<br>
+         {{ form.username }}<br><br>
+ 
+         {{ form.password.label_tag }}<br>
+         {{ form.password }}<br><br>
+ 
+         {{ form.role.label_tag }}
+         {% for radio in form.role %}
+             <div style="margin-bottom: 5px;">
+                 {{ radio.tag }} {{ radio.choice_label }}
+             </div>
+         {% endfor %}
+         <input type="submit" value="Submit" />
+     </form>
+ 
+ </div>
