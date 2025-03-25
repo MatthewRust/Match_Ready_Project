@@ -2,13 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class User(models.Model):
-    user_name = models.CharField(max_length=128, unique=True)
-    password = models.CharField(max_length=128)
-
-    def __str__(self):
-        return self.name
-    
 
 class Team(models.Model):
     name = models.CharField(max_length=128)
@@ -16,19 +9,29 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    teams = models.ManyToManyField(Team, related_name="fans")
+
+
+    def __str__(self):
+        return self.name
     
-class Coach(User):
-    team = models.OneToOneField(Team, on_delete=models.CASCADE, related_name="manager")
+    
+class Coach(UserProfile):
+    team = models.OneToOneField(Team, on_delete=models.CASCADE, related_name="coach")
 
     class Meta:
         verbose_name_plural = 'Coaches'
 
 
-class Player(User):
+class Player(UserProfile):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="players")
 
-class Fan(User):
-    favourite_teams = models.ManyToManyField(Team, related_name="fans")
+class Fan(UserProfile):
+    favourite_team = models.ForeignKey(Team, related_name="fans", on_delete=models.CASCADE)
 
 class Match(models.Model):
     team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_matches")
