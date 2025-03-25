@@ -10,34 +10,23 @@ class Team(models.Model):
         return self.name
     
 
-
-
-
-
-
-class UserProfile(models.Model):
+class DefaultUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.user.username
     
 
-class Coach(UserProfile):
+class Coach(DefaultUser):
     team = models.OneToOneField(Team, on_delete=models.CASCADE, related_name="coach")
 
     class Meta:
         verbose_name_plural = 'Coaches'
 
-    def save(self, *args, **kwargs):
-        if not self.user:
-            self.user = User.objects.create(username="defaultuser")  # Assign a default user if needed
-        super().save(*args, **kwargs)
-
-
-class Player(UserProfile):
+class Player(DefaultUser):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="players")
 
-class Fan(UserProfile):
+class Fan(DefaultUser):
     favourite_team = models.ForeignKey(Team, related_name="fans", on_delete=models.CASCADE)
 
 class Match(models.Model):
