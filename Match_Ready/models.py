@@ -1,30 +1,37 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-
+    
 class Team(models.Model):
     name = models.CharField(max_length=128)
     team_id = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
         return self.name
+    
+
+
+
+
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    teams = models.ManyToManyField(Team, related_name="fans")
-
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return self.user.username
     
-    
+
 class Coach(UserProfile):
     team = models.OneToOneField(Team, on_delete=models.CASCADE, related_name="coach")
 
     class Meta:
         verbose_name_plural = 'Coaches'
+
+    def save(self, *args, **kwargs):
+        if not self.user:
+            self.user = User.objects.create(username="defaultuser")  # Assign a default user if needed
+        super().save(*args, **kwargs)
 
 
 class Player(UserProfile):
