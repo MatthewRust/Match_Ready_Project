@@ -28,7 +28,7 @@ def UpcomingMatches(request):
     return render(request, 'Match_Ready/upcoming_matches.html')
 
 
-def user_register(request, user_type):
+def user_register(request):
     registered = False
 
     if request.method == 'POST':
