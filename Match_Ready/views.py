@@ -37,13 +37,18 @@ def user_register(request):
         if user_form.is_valid():
             username = user_form.cleaned_data['username']
             password = user_form.cleaned_data['password']
+            user = User.objects.create(username=username)
+            user.set_password(password)
 
-            if user_form.cleaned_data['role'] == 'player':
-                user = Player(username=username)
+            if user_form.cleaned_data['role'] == 'fan':
+                fan = Fan.objects.create(user=user, favourite_team=None)
+                fan.save()
             elif user_form.cleaned_data['role'] == 'coach':
-                user = Coach(username=username)
-            elif user_form.cleaned_data['role'] == 'fan':
-                user = Fan(username=username)
+                coach = Coach.objects.create(user=user, team=None)
+                coach.save()
+            elif user_form.cleaned_data['role'] == 'player':
+                player = Player.objects.create(user=user, team=None)
+                player.save()
 
             user.set_password(password)
             user.save()

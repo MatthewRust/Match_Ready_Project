@@ -18,16 +18,16 @@ class DefaultUser(models.Model):
     
 
 class Coach(DefaultUser):
-    team = models.OneToOneField(Team, on_delete=models.CASCADE, related_name="coach")
+    team = models.OneToOneField(Team, on_delete=models.CASCADE, related_name="coach", null=True,blank=True)
 
     class Meta:
         verbose_name_plural = 'Coaches'
 
 class Player(DefaultUser):
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="players")
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="players", null=True,blank=True)
 
 class Fan(DefaultUser):
-    favourite_team = models.ForeignKey(Team, related_name="fans", on_delete=models.CASCADE)
+    favourite_team = models.ForeignKey(Team, related_name="fans", on_delete=models.CASCADE, null=True,blank=True)
 
 class Match(models.Model):
     team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_matches")
