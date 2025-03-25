@@ -49,11 +49,11 @@ def user_register(request):
             elif user_form.cleaned_data['role'] == 'player':
                 player = Player.objects.create(user=user, team=None)
                 player.save()
+            
+            auth_user = authenticate(username=username, password=password)
+            login(request,auth_user)
 
-            user.set_password(password)
-            user.save()
-
-            return redirect('Match_Ready:login')
+            return redirect('Match_Ready:index')
     else:
         user_form = UserForm()
 
