@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+from django.contrib import messages
 
 from datetime import datetime
 
@@ -15,7 +16,14 @@ from Match_Ready.models import Fan, Player,Coach, Match, Team #Team sheets, anno
 from Match_Ready.forms import UserForm, FindTeamForm, NewTeamForm, AddMatch
 
 def index (request):
-    return render(request, 'Match_Ready/index.html')
+    if request.user.is_authenticated:
+        user_name = request.user.username
+    else:
+        user_name = "Guest"
+    context_dic = {}
+    context_dic['name'] = user_name
+    return render(request, 'Match_Ready/index.html', context=context_dic)
+
 
 def about (request):
     return render(request, 'Match_Ready/about.html')
@@ -34,73 +42,60 @@ def user_register(request):
     registered = False
 
     if request.method == 'POST':
-        user_form = UserForm(request.POST)
-
-        if user_form.is_valid():
-            username = user_form.cleaned_data['username']
-            password = user_form.cleaned_data['password']
-            user = User.objects.create(username=username)
-            user.set_password(password)
-
-            user.is_active = True
-            user.save()
-
-            if user_form.cleaned_data['role'] == 'fan':
-                fan = Fan.objects.create(user=user, team=None)
-                fan.save()
-            elif user_form.cleaned_data['role'] == 'coach':
-                coach = Coach.objects.create(user=user, team=None)
-                coach.save()
-            elif user_form.cleaned_data['role'] == 'player':
-                player = Player.objects.create(user=user, team=None)
-                player.save()
+        form = UserForm(request.POST)  # Changed variable name to 'form'
+        
+        if form.is_valid():
+            # Create User
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            role = form.cleaned_data['role']
             
-            auth_user = authenticate(username=username, password=password)
-            if auth_user is not None:
-                login(request, auth_user)
-                return redirect('Match_Ready:index')  # Redirect after successful login
-            else:
-                return HttpResponse("Authentication failed")
+            user = User.objects.create_user(username=username, password=password)
+            
+            # Create appropriate role-based profile
+            if role == 'fan':
+                Fan.objects.create(user=user)
+            elif role == 'coach':
+                Coach.objects.create(user=user)
+            elif role == 'player':
+                Player.objects.create(user=user)
+            
+            # Authenticate and login
+            authenticated_user = authenticate(username=username, password=password)
+            if authenticated_user:
+                login(request, authenticated_user)
+                return redirect('Match_Ready:index')  # Update with your home URL name
 
-            return redirect('Match_Ready:index')
+            registered = True
+        else:
+            print(form.errors)  # For debugging
     else:
-        user_form = UserForm()
+        form = UserForm()
 
-    return render(request, 'Match_Ready/signup.html', {
-        'user_form': user_form,
-        'form': user_form,
-        'registered': registered
-    })
-
+    return render(request, 'Match_Ready/signup.html', {'form': form, 'registered': registered})
 
 def user_login(request):
-    if request.method=='POST':
-        username=request.POST.get('username')
-        password=request.POST.get('password')
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-        print(f"Trying to authenticate user: {username}")  # Debugging line
+        user = authenticate(request, username=username, password=password)
 
-        user = authenticate(username=username, password=password)
-
-        if user:
-            if user.is_active:
-                print(f"User {user.username} authenticated!")  # Debugging line
-
-                login(request, user)
-                return redirect(reverse('Match_Ready:home'))
-            else:
-                return HttpResponse("Your Match_Ready account is disabled.")
+        if user is not None:
+            login(request, user)
+            return redirect(reverse('Match_Ready:index'))
         else:
-            print(f"Invalid login details: {username}, {password}")
-            return HttpResponse("Invalid login details supplied.")
-    else:
-        return render(request, 'Match_Ready/login.html')
-    
+            messages.error(request, "Invalid username or password.")
+            return redirect('Match_Ready:login')  # Redirect back to login page with an error message
+
+    return render(request, 'Match_Ready/login.html')
+
+
 
 @login_required
 def user_logout(request):
     logout(request)
-    return redirect(reverse('Match_Ready:home'))
+    return redirect(reverse('Match_Ready:index'))
 
 def display_matches(request):
     next_matches = Match.objects.filter(finished=False).order_by('match_day')[:15]

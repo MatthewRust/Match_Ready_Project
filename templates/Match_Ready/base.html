@@ -40,7 +40,9 @@
                     <li><a href="{% url 'Match_Ready:about' %}">About</a></li>
                     <li><a href="{% url 'Match_Ready:fixtures' %}">Fixtures</a></li>
                     <li><a href="{% url 'Match_Ready:login' %}">Login</a></li>
-                    <li>Logout</li>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'Match_Ready:logout' %}">Logout</a></li>
+                    {% endif %}
                 </ul>
             </div> <br>
 
