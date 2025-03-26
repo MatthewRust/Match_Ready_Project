@@ -96,7 +96,7 @@ def user_logout(request):
     logout(request)
     return redirect(reverse('Match_Ready:index'))
 
-def display_matches(request):
+def fixtures(request):
     next_matches = Match.objects.filter(finished=False).order_by('match_day')[:15]
     context_dict = {'upcoming_matches':next_matches}
     return render(request,'Match_Ready/UpcomingMatches.html',context=context_dict)
@@ -106,10 +106,12 @@ def display_matches(request):
 def my_team(request):
     user = request.user
     if user is None:
-        return redirect('Match_Ready:index')
+        return redirect('Match_Ready:login')
     role = find_default_user(request,user)
+    if role is None:
+        return redirect('Match_Ready:login')
     if role.team is None:
-        return redirect('Match_Ready:index')
+        return redirect('Match_Ready:find_team')
     team_name = role.team.name
     context_dict = {'team_name':team_name}
     return render(request,'Match_Ready/my_team.html',context=context_dict)
@@ -178,14 +180,14 @@ def ListOfPlayers(request):
 
 
 @login_required
-def fixtures(request):
+def upcoming_matches(request):
     user = request.user
     if user is None:
-        return redirect(reverse('Match_Ready:home'))
+        return redirect('Match_Ready:login')
     role = find_default_user(request, user)
     team_id = role.team.team_id
     fixtures = Match.objects.filter(id=team_id).order_by('match_date')[:10]
-    context_dict={'fixtures':fixtures}
+    context_dict={'home_matches':home_matches,'away_matches':away_matches}
     return render(request,'Match_Ready/fixtures.html',context=context_dict)
 
 

@@ -17,8 +17,9 @@
         <div id="sidebar">
             <ul id="sidebar-list">
                 <!--The two here will be for players and coaches only-->
-
-                <li><a href="{% url 'Match_Ready:my_team' %}">My Team</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'Match_Ready:my_team' %}">My Team</a></li>
+                {% endif %}
                 <li><a href="{% url 'Match_Ready:find_team' %}">Find new team</a></li>
 
                 <!--The two below will be for Coaches only check it in logic yet to be added-->
