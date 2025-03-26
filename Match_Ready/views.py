@@ -8,8 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib import messages
 
 from datetime import datetime
-
-
+#create team, create match, find team, tests, ajax, javascript
 
 from Match_Ready.models import Fan, Player,Coach, Match, Team #Team sheets, announcements
 
