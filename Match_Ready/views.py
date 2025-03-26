@@ -4,13 +4,13 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-
+from django.contrib.auth import get_user_model
 
 from datetime import datetime
 
 
 
-from Match_Ready.models import User,Fan, Player,Coach, Match, Team #Team sheets, announcements
+from Match_Ready.models import Fan, Player,Coach, Match, Team #Team sheets, announcements
 
 from Match_Ready.forms import UserForm, FindTeamForm, NewTeamForm, AddMatch
 
@@ -42,8 +42,11 @@ def user_register(request):
             user = User.objects.create(username=username)
             user.set_password(password)
 
+            user.is_active = True
+            user.save()
+
             if user_form.cleaned_data['role'] == 'fan':
-                fan = Fan.objects.create(user=user, favourite_team=None)
+                fan = Fan.objects.create(user=user, team=None)
                 fan.save()
             elif user_form.cleaned_data['role'] == 'coach':
                 coach = Coach.objects.create(user=user, team=None)
@@ -53,7 +56,11 @@ def user_register(request):
                 player.save()
             
             auth_user = authenticate(username=username, password=password)
-            login(request,auth_user)
+            if auth_user is not None:
+                login(request, auth_user)
+                return redirect('Match_Ready:index')  # Redirect after successful login
+            else:
+                return HttpResponse("Authentication failed")
 
             return redirect('Match_Ready:index')
     else:
@@ -71,10 +78,14 @@ def user_login(request):
         username=request.POST.get('username')
         password=request.POST.get('password')
 
+        print(f"Trying to authenticate user: {username}")  # Debugging line
+
         user = authenticate(username=username, password=password)
 
         if user:
             if user.is_active:
+                print(f"User {user.username} authenticated!")  # Debugging line
+
                 login(request, user)
                 return redirect(reverse('Match_Ready:home'))
             else:
@@ -100,8 +111,11 @@ def display_matches(request):
 @login_required
 def my_team(request):
     user = request.user
-    role = user.defaultuser.get_role()
-
+    if user is None:
+        return redirect(reverse('Match_Ready:home'))
+    role = find_default_user(request,user)
+    if role.team is None:
+        return redirect(reverse(request,'Match_Ready/index.html'))
     team_name = role.team.name
     context_dict = {'team_name':team_name}
     return render(request,'Match_Ready/my_team.html',context=context_dict)
@@ -113,7 +127,7 @@ def find_team(request):
 
     if user is None:
         return redirect(reverse('Match_Ready:home'))
-    role = user.defaultuser.get_role()
+    role = find_default_user(request,user)
 
     form = FindTeamForm()
 
@@ -159,7 +173,7 @@ def ListOfPlayers(request):
     user = request.user
     if user is None:
         return redirect(reverse('Match_Ready:home'))
-    role = user.defaultuser.get_role()
+    role = find_default_user(request,user)
 
     team = role.team
     list_of_players = Player.objects.filter(team=team)
@@ -174,14 +188,30 @@ def fixtures(request):
     user = request.user
     if user is None:
         return redirect(reverse('Match_Ready:home'))
-    role = user.defaultuser.get_role()
+    role = find_default_user(request, user)
     team_id = role.team.team_id
     fixtures = Match.objects.filter(id=team_id).order_by('match_date')[:10]
     context_dict={'fixtures':fixtures}
     return render(request,'Match_Ready/fixtures.html',context=context_dict)
 
 
+def find_default_user(request, user):
 
+    print(get_user_model())
+
+
+    print(f"Checking for user: {user.username} (ID: {user.id})")  # Debugging
+
+    user_role = Player.objects.filter(user=user).first() or \
+                Coach.objects.filter(user=user).first() or \
+                Fan.objects.filter(user=user).first()
+
+    if user_role:
+        print(f"User role found: {user_role.__class__.__name__}")
+        return user_role
+
+    print("User is not a Fan, Coach, or Player")
+    return None
  
 
 
