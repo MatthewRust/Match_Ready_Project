@@ -16,7 +16,15 @@ class DefaultUser(models.Model):
     def __str__(self):
         return self.user.username
     
-
+    def get_role(self):
+        if hasattr(self, 'coach'):
+            return self.coach
+        elif hasattr(self, 'player'):
+            return self.player
+        elif hasattr(self, 'fan'):
+            return self.fan
+        return None
+    
 class Coach(DefaultUser):
     team = models.OneToOneField(Team, on_delete=models.CASCADE, related_name="coach", null=True,blank=True)
 
@@ -27,7 +35,7 @@ class Player(DefaultUser):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="players", null=True,blank=True)
 
 class Fan(DefaultUser):
-    favourite_team = models.ForeignKey(Team, related_name="fans", on_delete=models.CASCADE, null=True,blank=True)
+    team = models.ForeignKey(Team, related_name="fans", on_delete=models.CASCADE, null=True,blank=True)
 
 class Match(models.Model):
     team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_matches")

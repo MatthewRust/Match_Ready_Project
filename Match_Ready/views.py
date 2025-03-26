@@ -93,35 +93,38 @@ def display_matches(request):
     return render(request,'Match_Ready/UpcomingMatches.html',context=context_dict)
 
 @login_required
-def my_team(request,user_id):
-    user = User.objects.get(id=user_id)
-    teams = User.teams.all()
-    context_dict = {'teams':teams}
+def my_team(request):
+    user = request.user
+    role = user.defaultuser.get_role()
+
+    team_name = role.team.all().name
+    context_dict = {'team_name':team_name}
     return render(request,'Match_Ready/my_team.html',context=context_dict)
 
 @login_required
-def find_team(request,user_id):
-    user = get_object_or_404(User,id=user_id)
+def find_team(request):
+    user = request.user
 
     if user is None:
         return redirect(reverse('Match_Ready:home'))
-    
+    role = user.defaultuser.get_role()
+
     form = FindTeamForm()
 
     if request.method=='POST':
         form = FindTeamForm(request.POST)
         if form.is_valid():
-            if user:
+            if role:
                 team_id = form.cleaned_data['team_id']
                 try:
                     team = Team.objects.get(id=team_id)  # Fetch the team instance
-                    user.teams.add(team)
-                    return redirect(reverse('Match_Ready:my_team',kwargs={'user_id':user_id}))
+                    role.teams.add(team)
+                    return redirect(reverse('Match_Ready:my_team',kwargs={'user_id':user.username}))
                 except Team.DoesNotExist:
                     return HttpResponse("Team ID is incorrect")
             else:
                 print(form.errors)
-    context_dict = {'form':form,'user':user}
+    context_dict = {'form':form,'user':user, 'role': role}
     return render(request,'Match_Ready/find_team.html',context=context_dict)
 
 #temperarrilly changed to see the working create team form
@@ -180,6 +183,9 @@ def fixtures(request, team_id):
     fixtures = fixtures.objects.filter(id=team_id).order_by('post_date')[:10]
     context_dict={'fixtures':fixtures}
     return render(request,'Match_Ready/fixtures.html',context=context_dict)
+
+
+
  
 
 
@@ -207,6 +213,8 @@ def fixtures(request, team_id):
 #         if form.is_valid():
 #             if category:
 #                 page = form.save(commit=False)
+
+
 #                 page.category = category
 #                 page.views = 0
 #                 page.save()
