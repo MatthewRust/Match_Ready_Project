@@ -121,7 +121,7 @@ def find_team(request):
     user = request.user
 
     if user is None:
-        return redirect(reverse('Match_Ready:home'))
+        return redirect(reverse('Match_Ready:index'))
     role = find_default_user(request,user)
 
     form = FindTeamForm()
@@ -164,18 +164,17 @@ def create_team(request):
 
 
 @login_required
-def ListOfPlayers(request):
+def player_list(request):
     user = request.user
     if user is None:
-        return redirect(reverse('Match_Ready:home'))
+        return redirect(reverse('Match_Ready:index'))
     role = find_default_user(request,user)
 
     team = role.team
     list_of_players = Player.objects.filter(team=team)
-    context_dict = {'team_detail':list_of_players}
-    #
-    #
-    return render(request,'Match_Ready/team_detail.html',context=context_dict)
+    context_dict = {'list_of_players':list_of_players, 'team':team}
+    
+    return render(request,'Match_Ready/list_of_players.html',context=context_dict)
 
 
 @login_required
@@ -184,10 +183,15 @@ def upcoming_matches(request):
     if user is None:
         return redirect('Match_Ready:login')
     role = find_default_user(request, user)
-    team_id = role.team.team_id
-    fixtures = Match.objects.filter(id=team_id).order_by('match_date')[:10]
+    if role is None:
+        return redirect('Match_Ready:login')
+    if role.team is None:
+        return redirect('Match_Ready:find_team')
+    
+    home_matches = Match.objects.filter(team1=role.team, match_date__gte=datetime.now()).order_by('match_date')[:10]
+    away_matches = Match.objects.filter(team2=role.team, match_date__gte=datetime.now()).order_by('match_date')[:10]
     context_dict={'home_matches':home_matches,'away_matches':away_matches}
-    return render(request,'Match_Ready/fixtures.html',context=context_dict)
+    return render(request,'Match_Ready/upcoming_matches.html',context=context_dict)
 
 
 def find_default_user(request, user):
@@ -207,68 +211,3 @@ def find_default_user(request, user):
 
     print("User is not a Fan, Coach, or Player")
     return None
- 
-
-
-
-
-
-
-
-
-
-# @login_required
-# def add_page(request, category_name_slug):
-#     try:
-#         category = Category.objects.get(slug=category_name_slug)
-#     except Category.DoesNotExist:
-#         category=None
-
-#     if category is None:
-#         return redirect(reverse('Match_Ready:home'))
-    
-#     form = PageForm()
-
-#     if request.method == 'POST':
-#         form = PageForm(request.POST)
-#         if form.is_valid():
-#             if category:
-#                 page = form.save(commit=False)
-
-
-#                 page.category = category
-#                 page.views = 0
-#                 page.save()
-#                 return redirect(reverse('Match_Ready:show_category',kwargs={'category_name_slug':category_name_slug}))
-#             else:
-#                 print(form.errors)
-#     context_dict = {'form': form,'category': category}
-#     return render(request, 'Match_Ready/add_page.html', context=context_dict)
-
-
-# def show_category(request, category_name_slug):
-#     context_dict={}
-
-#     try:
-#         category = Category.objects.get(slug=category_name_slug)
-#         pages = Page.objects.filter(category=category)
-#         context_dict['pages'] = pages
-#         context_dict['category'] = category
-#     except Category.DoesNotExist:
-#         context_dict['pages']=None
-#         context_dict['category']=None
-#     return render(request, 'Match_Ready/category.html', context=context_dict)
-
-# @login_required
-# def add_category(request):
-#     form = CategoryForm()
-    
-#     if request.method == 'POST':
-#         form = CategoryForm(request.POST)
-#         if form.is_valid():
-#             form.save(commit=True)
-#             return redirect(reverse('Match_Ready:home'))
-#         else:
-#             print(form.errors)
-#             return render(request, "Match_Ready/add_category.html", {"form": form, "errors": form.errors})  
-#     return render(request, 'Match_Ready/add_category.html',{'form':form}) 
