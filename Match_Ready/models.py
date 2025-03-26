@@ -16,14 +16,6 @@ class DefaultUser(models.Model):
     def __str__(self):
         return self.user.username
     
-    def get_role(self):
-        if hasattr(self, 'coach'):
-            return self.coach
-        elif hasattr(self, 'player'):
-            return self.player
-        elif hasattr(self, 'fan'):
-            return self.fan
-        return None
     
 class Coach(DefaultUser):
     team = models.OneToOneField(Team, on_delete=models.CASCADE, related_name="coach", null=True,blank=True)
