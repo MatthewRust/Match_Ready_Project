@@ -50,6 +50,11 @@
             <div id="main">
                 {% block body_block %}
                 {% endblock %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <p style="color: red;">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
             </div>
 
 

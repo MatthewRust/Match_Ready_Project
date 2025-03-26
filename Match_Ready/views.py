@@ -148,6 +148,11 @@ def find_team(request):
 @login_required
 def create_team(request):
     context_dict = {}
+    role = find_default_user(request,request.user)
+    if not isinstance(role, Coach):
+        messages.error(request, "Must be a coach to make a new team")
+        return redirect('Match_Ready:index')
+
     # registered = False
     # if request.method == 'POST':
     #         team_form = NewTeamForm(request.POST)
@@ -211,3 +216,10 @@ def find_default_user(request, user):
 
     print("User is not a Fan, Coach, or Player")
     return None
+
+def make_team(request):
+    role = find_default_user(request,request.user)
+    if not isinstance(role, Coach):
+        messages.error(request, "Must be a coach to make a new match")
+        return redirect('Match_Ready:index')
+    return render('Match_Ready/make_team.html')
