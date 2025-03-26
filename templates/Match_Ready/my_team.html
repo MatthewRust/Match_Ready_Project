@@ -1,16 +1,52 @@
-{% extends 'Match_Ready/base.html' %}
-
-{% block title_block %}
-    My Team
-{% endblock %}
-
-
-{% block body_block %}
-
+{% extends 'Match_Ready/base.html' %} {% block title_block %}My Team{% endblock
+%} {% block body_block %}
 <h1>My Team</h1>
-<div> 
-    <a href="{% url 'Match_Ready:ListOfPeople' %}">People in your team</a>
-    <a href="{% url 'Match_Ready:UpcomingMatches' %}">Upcoming Matches</a>
-</div>
-
-{% endblock %}
+{% if team %}
+<p><strong>Name:</strong> {{ team.name }}</p>
+<p><strong>Description:</strong> {{ team.description }}</p>
+<p><strong>Location:</strong> {{ team.location }}</p>
+<p><strong>Sport:</strong> {{ team.sport }}</p>
+<h2>Upcoming Matches</h2>
+<ul>
+  {% for match in matches %}
+  <li>
+    {{ match.team1.name }} vs {{ match.team2.name }} on {{ match.match_date }}
+  </li>
+  {% empty %}
+  <li>No upcoming matches.</li>
+  {% endfor %}
+</ul>
+<h2>Announcements</h2>
+<ul>
+  {% for announcement in announcements %}
+  <li>
+    {{ announcement.title }} - {{ announcement.content }} ({{
+    announcement.date_posted }})
+  </li>
+  {% empty %}
+  <li>No announcements.</li>
+  {% endfor %}
+</ul>
+<h2>Team Sheets</h2>
+<ul>
+  {% for team_sheet in team_sheets %}
+  <li>
+    <a href="{% url 'Match_Ready:team_sheet_detail' team_sheet.id %}"
+      >{{ team_sheet.match }}</a
+    >
+  </li>
+  {% empty %}
+  <li>No team sheets.</li>
+  {% endfor %}
+</ul>
+{% if user.defaultuser.__class__.__name__ == 'Coach' %}
+<a href="{% url 'Match_Ready:create_team_sheet' team.id %}"
+  >Create Team Sheet</a
+>
+|
+<a href="{% url 'Match_Ready:create_announcement' team.id %}"
+  >Post Announcement</a
+>
+{% endif %} {% else %}
+<p>You are not associated with any team.</p>
+{% endif %} {% endblock %}

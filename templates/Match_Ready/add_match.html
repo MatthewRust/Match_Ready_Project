@@ -1,19 +1,8 @@
-{% extends 'Match_Ready/base.html' %}
-
-{% block title_block %}
-    Add Match
-{% endblock %}
-
-
-{% block body_block %}
-
-    <h1>Create a new match</h1>
-
-    <form id="add_match_form" method="post" action ="{% url 'Match_Ready:fixtures' %}">
-        {% csrf_token %}
-        Team 1 <input type ="text" name ="team1" size="50" /><br />
-        Team 2 <input type ="text" name ="team2" size="50" /><br />
-        Date <input type ="datetime-local" name = "time" size = "40" /> <br />
-    </form>
-
+{% extends 'Match_Ready/base.html' %} {% block title_block %}Add Match{%
+endblock %} {% block body_block %}
+<h1>Add a New Match</h1>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <input type="submit" value="Add Match" />
+</form>
 {% endblock %}

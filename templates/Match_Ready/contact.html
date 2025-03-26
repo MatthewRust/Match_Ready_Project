@@ -1,0 +1,10 @@
+{% extends 'Match_Ready/base.html' %} {% block title_block %}Contact Us{%
+endblock %} {% block body_block %}
+<h1>Contact Us</h1>
+<form method="post">
+  {% csrf_token %}
+  <label>Email:</label><input type="email" name="email" required /><br />
+  <label>Phone:</label><input type="tel" name="phone" /><br />
+  <input type="submit" value="Submit" />
+</form>
+{% endblock %}

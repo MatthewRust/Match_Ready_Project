@@ -1,22 +1,8 @@
-{% extends 'Match_Ready/base.html' %}
-
-{% block title_block %}
-    Find a Team
-{% endblock %}
-
-
-{% block body_block %}
-
-    <h1>Find a New Team</h1>
-
-
-    <div>
-        <p>Team ID</p>
-        <form id="team_id_form" method="post" action="{% url 'Match_Ready:find_team' %}">
-            {% csrf_token %}
-            <input type="text" name="team_id" size="50" /><br />
-            <input type="submit" value="submit" />
-        </form>
-    </div>
-
+{% extends 'Match_Ready/base.html' %} {% block title_block %}Find Team{%
+endblock %} {% block body_block %}
+<h1>Find a Team</h1>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <input type="submit" value="Join Team" />
+</form>
 {% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'Match_Ready/base.html' %} {% block title_block %}Team Sheet - {{
+team_sheet.match }}{% endblock %} {% block body_block %}
+<h1>Team Sheet for {{ team_sheet.team.name }} in {{ team_sheet.match }}</h1>
+<ul>
+  {% for availability in availabilities %}
+  <li>
+    {{ availability.player.user.username }}: {% if availability.available
+    %}Available{% else %}Not Available{% endif %}
+  </li>
+  {% empty %}
+  <li>No players listed.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

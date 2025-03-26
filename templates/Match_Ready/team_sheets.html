@@ -1,0 +1,15 @@
+{% extends 'Match_Ready/base.html' %} {% block title_block %}Team Sheets - {{
+team.name }}{% endblock %} {% block body_block %}
+<h1>Team Sheets for {{ team.name }}</h1>
+<ul>
+  {% for team_sheet in team_sheets %}
+  <li>
+    <a href="{% url 'Match_Ready:team_sheet_detail' team_sheet.id %}"
+      >{{ team_sheet.match }}</a
+    >
+  </li>
+  {% empty %}
+  <li>No team sheets available.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

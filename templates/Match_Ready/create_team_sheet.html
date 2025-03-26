@@ -1,0 +1,8 @@
+{% extends 'Match_Ready/base.html' %} {% block title_block %}Create Team Sheet{%
+endblock %} {% block body_block %}
+<h1>Create Team Sheet for {{ team.name }}</h1>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <input type="submit" value="Create Team Sheet" />
+</form>
+{% endblock %}

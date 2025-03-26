@@ -1,18 +1,13 @@
-{% extends 'Match_Ready/base.html' %}
-
-{% block title_block %}
-    Upcoming Matchs
-{% endblock %}
-
-
-{% block body_block %}
-    <h1>Upcoming matches for your team</h1>
-
-
-    <div>
-        <ul>
-            <li></li>
-        </ul>
-    </div>
-
+{% extends 'Match_Ready/base.html' %} {% block title_block %}Upcoming Matches{%
+endblock %} {% block body_block %}
+<h1>Upcoming Matches</h1>
+<ul>
+  {% for match in matches %}
+  <li>
+    {{ match.team1.name }} vs {{ match.team2.name }} on {{ match.match_date }}
+  </li>
+  {% empty %}
+  <li>No upcoming matches.</li>
+  {% endfor %}
+</ul>
 {% endblock %}
