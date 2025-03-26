@@ -106,10 +106,10 @@ def display_matches(request):
 def my_team(request):
     user = request.user
     if user is None:
-        return redirect(reverse('Match_Ready:home'))
+        return redirect('Match_Ready:index')
     role = find_default_user(request,user)
     if role.team is None:
-        return redirect(reverse(request,'Match_Ready/index.html'))
+        return redirect('Match_Ready:index')
     team_name = role.team.name
     context_dict = {'team_name':team_name}
     return render(request,'Match_Ready/my_team.html',context=context_dict)
