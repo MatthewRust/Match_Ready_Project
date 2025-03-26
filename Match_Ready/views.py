@@ -3,6 +3,8 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
 
 from datetime import datetime
 
@@ -63,6 +65,7 @@ def user_register(request):
         'registered': registered
     })
 
+
 def user_login(request):
     if request.method=='POST':
         username=request.POST.get('username')
@@ -82,24 +85,27 @@ def user_login(request):
     else:
         return render(request, 'Match_Ready/login.html')
     
+
 @login_required
 def user_logout(request):
     logout(request)
     return redirect(reverse('Match_Ready:home'))
 
 def display_matches(request):
-    next_matches = Match.objects.filter(finished=False).orderby('match_day')[:15]
+    next_matches = Match.objects.filter(finished=False).order_by('match_day')[:15]
     context_dict = {'upcoming_matches':next_matches}
     return render(request,'Match_Ready/UpcomingMatches.html',context=context_dict)
+
 
 @login_required
 def my_team(request):
     user = request.user
     role = user.defaultuser.get_role()
 
-    team_name = role.team.all().name
+    team_name = role.team.name
     context_dict = {'team_name':team_name}
     return render(request,'Match_Ready/my_team.html',context=context_dict)
+
 
 @login_required
 def find_team(request):
@@ -118,8 +124,9 @@ def find_team(request):
                 team_id = form.cleaned_data['team_id']
                 try:
                     team = Team.objects.get(id=team_id)  # Fetch the team instance
-                    role.teams.add(team)
-                    return redirect(reverse('Match_Ready:my_team',kwargs={'user_id':user.username}))
+                    role.team = team
+                    role.save()
+                    return redirect(reverse('Match_Ready:my_team',kwargs={'username':user.username}))
                 except Team.DoesNotExist:
                     return HttpResponse("Team ID is incorrect")
             else:
@@ -146,41 +153,30 @@ def create_team(request):
     #     user_form = NewTeamForm()
     return render(request,'Match_Ready/create_team.html',context=context_dict)
 
-@login_required
-def create_announcement(request,team_id):
-    try:
-        team = Team.objects.get(id=team_id)
-    except Team.DoesNotExist:
-        team = None
 
-    if team is None:
+@login_required
+def ListOfPlayers(request):
+    user = request.user
+    if user is None:
         return redirect(reverse('Match_Ready:home'))
-    
-    form = AnnouncementForm()
-    
-    if request.method == 'POST':
-        form = AnnouncementForm(request.POST)
-        if form.is_valid():
-            form.save(commit=True)
-            return redirect(reverse('Match_Ready:home'))
-        else:
-            print(form.errors)
-            return render(request, "Match_Ready/create_announcements.html", {"form": form, "errors": form.errors})  
-    return render(request, 'Match_Ready/create_announcements.html',{'form':form}) 
+    role = user.defaultuser.get_role()
 
-
-@login_required
-def ListOfPlayers(request, team_id):
-    team = Team.objects.get(id=team_id)
-    context_dict = {'team_detail':'pass'}
+    team = role.team
+    list_of_players = Player.objects.filter(team=team)
+    context_dict = {'team_detail':list_of_players}
     #
     #
     return render(request,'Match_Ready/team_detail.html',context=context_dict)
 
 
 @login_required
-def fixtures(request, team_id):
-    fixtures = fixtures.objects.filter(id=team_id).order_by('post_date')[:10]
+def fixtures(request):
+    user = request.user
+    if user is None:
+        return redirect(reverse('Match_Ready:home'))
+    role = user.defaultuser.get_role()
+    team_id = role.team.team_id
+    fixtures = Match.objects.filter(id=team_id).order_by('match_date')[:10]
     context_dict={'fixtures':fixtures}
     return render(request,'Match_Ready/fixtures.html',context=context_dict)
 
