@@ -42,7 +42,7 @@ def user_register(request):
     registered = False
 
     if request.method == 'POST':
-        form = UserForm(request.POST)  # Changed variable name to 'form'
+        form = UserForm(request.POST)  
         
         if form.is_valid():
             # Create User
@@ -52,7 +52,6 @@ def user_register(request):
             
             user = User.objects.create_user(username=username, password=password)
             
-            # Create appropriate role-based profile
             if role == 'fan':
                 Fan.objects.create(user=user)
             elif role == 'coach':
@@ -64,11 +63,11 @@ def user_register(request):
             authenticated_user = authenticate(username=username, password=password)
             if authenticated_user:
                 login(request, authenticated_user)
-                return redirect('Match_Ready:index')  # Update with your home URL name
+                return redirect('Match_Ready:index') 
 
             registered = True
         else:
-            print(form.errors)  # For debugging
+            print(form.errors)  
     else:
         form = UserForm()
 
@@ -86,7 +85,7 @@ def user_login(request):
             return redirect(reverse('Match_Ready:index'))
         else:
             messages.error(request, "Invalid username or password.")
-            return redirect('Match_Ready:login')  # Redirect back to login page with an error message
+            return redirect('Match_Ready:login') 
 
     return render(request, 'Match_Ready/login.html')
 
@@ -132,7 +131,7 @@ def find_team(request):
             if role:
                 team_id = form.cleaned_data['team_id']
                 try:
-                    team = Team.objects.get(id=team_id)  # Fetch the team instance
+                    team = Team.objects.get(id=team_id)  
                     role.team = team
                     role.save()
                     return redirect(reverse('Match_Ready:my_team',kwargs={'username':user.username}))
