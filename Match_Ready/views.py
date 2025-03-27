@@ -31,6 +31,40 @@ def contact(request):
     superusers = User.objects.filter(is_superuser=True)
     return render(request,'Match_Ready/contact.html', context={'superusers':superusers})
 
+
+def add_match(request):
+    context = {}
+    if request.method == "POST":
+        team1_id = request.POST.get("team1")
+        team2_id = request.POST.get("team2")
+        date_str = request.POST.get("match_date")
+
+        errors = {}
+
+        try:
+            team1 = Team.objects.get(team_id=team1_id.strip())
+            team2 = Team.objects.get(team_id=team2_id.strip())
+        except (Team.DoesNotExist, ValueError):
+            errors['teams'] = "Invalid team ID(s)"
+        
+        if not date_str:
+            errors['date'] = "Date is required"
+
+        if errors:
+            context['errors'] = errors
+        else:
+            Match.objects.create(
+                team1=team1,
+                team2=team2,
+                match_date=date_str
+            )
+            return redirect("Match_Ready:index")
+
+    return render(request, 'Match_Ready/add_match.html', context)
+
+
+
+
 def user_register(request):
     registered = False
 
@@ -90,7 +124,7 @@ def user_logout(request):
 def fixtures(request):
     next_matches = Match.objects.filter(match_date__gte=timezone.now()).order_by('match_date')[:15]
     context_dict = {'upcoming_matches':next_matches}
-    return render(request,'Match_Ready/UpcomingMatches.html',context=context_dict)
+    return render(request,'Match_Ready/fixtures.html',context=context_dict)
 
 
 @login_required
@@ -142,6 +176,27 @@ def create_team(request):
     if not isinstance(role, Coach):
         messages.error(request, "Must be a coach to make a new team")
         return redirect('Match_Ready:index')
+    
+    if request.method == "POST":
+        team_name = request.POST.get("team_name")
+        team_ID = request.POST.get("team_ID") #gets the team_id and name 
+
+        errors = {}
+
+        if not team_name: #some light error checking 
+            errors['team_name'] = "Team name is required"
+        if not team_ID:
+            errors['team_ID'] = "A team ID is needed"
+        else:
+            if Team.objects.filter(team_id=team_ID).exists():
+                errors['team_ID'] = "This team ID is taken"
+
+        if errors:
+            context_dict['errors'] = errors
+
+        else:
+            Team.objects.create(name=team_name, team_id = team_ID)
+            return redirect("Match_Ready:index")
 
     
     return render(request,'Match_Ready/create_team.html',context=context_dict)

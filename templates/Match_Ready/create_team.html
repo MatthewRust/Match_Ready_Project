@@ -10,12 +10,14 @@
 
 
     <div>
-    <form id="NewTeam" method="post" action="{% url 'Match_Ready:index' %}">
+    <form id="NewTeam" method="post" action="{% url 'Match_Ready:create_team' %}">
         {% csrf_token %}
         Team Name: <input type="text" name="team_name" size="50" /><br />
-        Team Id: <input type="teamID" name="password" size="50" /><br />
+        Team Id: <input type="teamID" name="team_ID" size="50" /><br />
         <input type="submit" value="submit" />
     </form>
     </div>
 
+    {% if errors.team_name %}<div class="errors">{{ errors.team_name }}</div>{% endif %}
+    {% if errors.team_ID %}<div class="errors">{{ errors.team_ID }}</div>{% endif %}
 {% endblock %}
