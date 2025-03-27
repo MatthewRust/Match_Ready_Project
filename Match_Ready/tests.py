@@ -3,6 +3,8 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
 from Match_Ready.models import Team, Match, Coach, Player, Fan
+import json
+
 
 class ViewsTests(TestCase):
     def setUp(self):
