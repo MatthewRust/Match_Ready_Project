@@ -128,11 +128,7 @@ def user_logout(request):
 def fixtures(request):
     next_matches = Match.objects.filter(match_date__gte=timezone.now()).order_by('match_date')[:15]
     context_dict = {'upcoming_matches':next_matches}
-<<<<<<< HEAD
     return render(request,'Match_Ready/upcoming_matches.html',context=context_dict)
-=======
-    return render(request,'Match_Ready/fixtures.html',context=context_dict)
->>>>>>> dab80a84428ffb40fa6da5999b07714f12ce5af6
 
 
 @login_required
