@@ -1,6 +1,6 @@
 from django import forms 
 from django.contrib.auth.models import User
-from .models import User, Player, Fan, Team, Coach, Match 
+from .models import User, Player, Fan, Team, Coach, Match, DefaultUser 
 
 
 class UserForm(forms.ModelForm):
@@ -37,40 +37,8 @@ class AddMatch(forms.ModelForm):
         fields = ('team1', 'team2', 'match_date')
 
 
-# class PLayerForm(forms.ModelForm):
-#     class Meta:
-#         model = UserForm
-#         fields = ('player')
-
-
-
-# class CoachForm(forms.ModelForm):
-#     class Meta:
-#         model = UserForm
-#         fields = ('coach')
-
-
-# class FanForm(forms.ModelForm):
-#     class Meta:
-#         model = UserForm
-#         fields = ('fan')
-
-class FindTeamForm(forms.ModelForm):
-    teamID = forms.IntegerField()
-    class Meta:
-        model = Team
-        fields = ('teamID',)
-
-
-
-
-#class AnnouncementForm(forms.ModelForm):
- #   teamID = forms.IntegerField()
-  #  info = forms.CharField()
-   # class Meta:
-    #    model = Announcement
-     #   fields = ('teamID', 'info')
-
+class FindTeamForm(forms.Form):
+    team_id = forms.CharField()
 
 
 
