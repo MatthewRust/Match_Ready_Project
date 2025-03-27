@@ -150,18 +150,7 @@ def create_team(request):
         messages.error(request, "Must be a coach to make a new team")
         return redirect('Match_Ready:index')
 
-    # registered = False
-    # if request.method == 'POST':
-    #         team_form = NewTeamForm(request.POST)
-
-    #         if team_form.is_valid():
-    #             team = team_form.save()
-    #             team.save()
-    #             registered = True
-    #             return redirect(reverse('Match_Ready:home'))
-
-    # else:
-    #     user_form = NewTeamForm()
+    
     return render(request,'Match_Ready/create_team.html',context=context_dict)
 
 
