@@ -1,31 +1,118 @@
 {% extends 'Match_Ready/base.html' %}
+{% load static %}
 
 {% block title_block %}
-    Announcements
+    {% if home_matches or away_matches %}
+        Upcoming Matches for {{ request.user.player.team.name|default:request.user.coach.team.name|default:request.user.fan.team.name|default:"Your Team" }}
+    {% else %}
+        Fixtures
+    {% endif %}
 {% endblock %}
 
-
 {% block body_block %}
- <h1>Fixtures</h1>
+    {# Decide which template context you're using #}
+    {% with matches_list=upcoming_matches|default:home_matches|default:away_matches %}
 
-    {% if upcoming_matches %}
-    <h2>Up coming matches are: </h2>
-    <ul>
-    {% for match in upcoming_matches %}
-        <li>{{ match }}</li>
-    {% endfor %}
-    </ul>
-    {% else %}
-    <h2>There are no upcoming matches at the moment</h2>
-        {% if coach %}
-            <p>Check back later to see any changes or if you are a coach add a new match <a href="{% url 'Match_Ready:add_match' %}">here</a></p>
+        {% if matches_list %}
+            <h1>Upcoming Matches</h1>
+            <ul class="match-list">
+            {% for match in matches_list %}
+                <li>
+                    {{ match }}
+                    {% if user.is_authenticated %}
+                        {# Check if user is already attending - requires modifying the view context slightly #}
+                        {# For now, just show the button #}
+                        <button class="button attend-button" data-match-id="{{ match.id }}">
+                            Attend Match
+                        </button>
+                        <span class="attendee-count" data-match-id="{{ match.id }}">{{ match.attendees }}</span> attendees
+                    {% else %}
+                         - Login to attend
+                    {% endif %}
+                    <span class="attend-status" data-match-id="{{ match.id }}"></span> {# Area for messages #}
+                </li>
+            {% endfor %}
+            </ul>
         {% else %}
-            <p></p>
+            <h1>Fixtures</h1>
+            <h2>There are no upcoming matches at the moment</h2>
+            {# ... rest of your existing conditional content ... #}
         {% endif %}
+
+    {% endwith %}
+
+    {# --- If this template is specifically upcoming_matches.html --- #}
+    {% if home_matches or away_matches %}
+        {# Your Home/Away buttons and divs from upcoming_matches.html can go here if needed #}
+        {# Make sure the match list rendering above is adapted or duplicated #}
+        {# Example: Put the button/span inside the loops in the home_matches/away_matches divs #}
     {% endif %}
+    {# --- End specific section --- #}
 
+{% endblock %}
 
+{% block scripts_extra %}
+<script>
+    // Simple function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
 
+    $(document).ready(function() {
+        $('.attend-button').on('click', function() {
+            const button = $(this);
+            const matchId = button.data('match-id');
+            const statusSpan = $(`.attend-status[data-match-id=${matchId}]`);
+            const countSpan = $(`.attendee-count[data-match-id=${matchId}]`);
 
-</div>
+            statusSpan.text('Processing...').css('color', 'grey'); // Provide feedback
+
+            $.ajax({
+                url: "{% url 'Match_Ready:attend_match_ajax' %}", // The URL for our AJAX view
+                type: "POST",
+                data: {
+                    'match_id': matchId,
+                    'csrfmiddlewaretoken': csrftoken // Include CSRF token
+                },
+                dataType: 'json', // Expect JSON response
+                success: function(data) {
+                    if (data.status === 'success') {
+                        statusSpan.text(data.message).css('color', 'green');
+                        button.text('Attending').prop('disabled', true); // Update button
+                        countSpan.text(data.new_count); // Update count
+                    } else {
+                        // Handle specific errors if needed, e.g., already attending
+                        statusSpan.text('Error: ' + data.message).css('color', 'red');
+                        if (data.already_attending) {
+                             button.text('Attending').prop('disabled', true);
+                        }
+                    }
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log(xhr.status + ": " + xhr.responseText); // Log detailed error
+                    let errorMsg = 'An error occurred.';
+                    if(xhr.status == 403) {
+                        errorMsg = 'Please login to attend.';
+                    } else if(xhr.status == 404) {
+                        errorMsg = 'Match not found.';
+                    }
+                    statusSpan.text(errorMsg).css('color', 'red');
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}
