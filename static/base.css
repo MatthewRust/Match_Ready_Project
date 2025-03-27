@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* Modern font stack */
     line-height: 1.6;
     background-color: #f8f9fa;
     color: #333;
@@ -9,10 +9,25 @@ body {
     flex-direction: column;
 }
 
-h1, h2, h3 {
-    color: #0056b3;
-    margin-bottom: 0.5em;
+html {
+  box-sizing: border-box;
 }
+*, *:before, *:after {
+  box-sizing: inherit; /* Makes width/height include padding and border */
+}
+
+
+h1, h2, h3, h4, h5, h6 { /* Include lower heading levels */
+    color: #0056b3;
+    margin-top: 1em; /* Add some top margin */
+    margin-bottom: 0.5em;
+    line-height: 1.3; /* Slightly tighter line height for headings */
+}
+
+h1 { font-size: 2.2em; }
+h2 { font-size: 1.8em; }
+h3 { font-size: 1.4em; }
+/* Add h4, h5, h6 sizes if needed */
 
 a {
     color: #0056b3;
@@ -25,6 +40,19 @@ a:hover {
     text-decoration: underline;
 }
 
+/* === Add Focus Styles for Accessibility === */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #0056b3;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.25); /* Optional glow */
+}
+/* Customize focus styles as needed */
+
+
 ul {
     list-style-type: none;
     padding: 0;
@@ -34,25 +62,43 @@ li {
     margin-bottom: 0.5em;
 }
 
+/* === Image Responsiveness === */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Prevents bottom space */
+}
+
+
 .container {
     width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
+    max-width: 1400px; /* Adjust as needed */
+    margin: 0 auto; /* Centers the container */
+    padding-left: 15px;  /* Add horizontal padding */
+    padding-right: 15px; /* Add horizontal padding */
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
 
+/* Header */
 #header {
     background-color: #0056b3;
     color: white;
-    padding: 15px 25px;
+    padding: 15px 0; /* Use container padding */
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0; /* Prevent header from shrinking */
 }
+/* Adjust padding within container */
+#header > * {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
 
 #header h1 {
     margin: 0;
@@ -63,24 +109,38 @@ li {
     color: white;
     text-decoration: none;
 }
+#header h1 a:hover {
+    text-decoration: none; /* Keep header link un-underlined */
+    opacity: 0.9;
+}
 #header .user-info {
     font-size: 0.9em;
 }
+#header .user-info a { /* Style links in user info */
+    color: #e9ecef;
+    margin-left: 10px;
+}
+#header .user-info a:hover {
+    color: #ffffff;
+}
 
 
+/* Navbar */
 #navbar {
     background-color: #e9ecef;
-    padding: 10px 0;
+    padding: 10px 0; /* Use container padding */
     border-bottom: 1px solid #dee2e6;
+    flex-shrink: 0; /* Prevent navbar from shrinking */
 }
 
 #nav-list {
     list-style-type: none;
     margin: 0;
-    padding: 0 20px;
+    padding: 0 15px; /* Align with container padding */
     display: flex;
     justify-content: flex-start;
     gap: 20px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
 #nav-list li a {
@@ -90,20 +150,24 @@ li {
     padding: 8px 12px;
     border-radius: 4px;
     transition: background-color 0.3s, color 0.3s;
+    display: block; /* Ensure padding applies correctly */
 }
 
-#nav-list li a:hover {
+#nav-list li a:hover,
+#nav-list li a.active { /* Add an .active class for current page */
     background-color: #0056b3;
     color: white;
     text-decoration: none;
 }
 
+/* Content Area (Sidebar + Main Content) */
 #content-area {
     display: flex;
     flex-grow: 1;
     width: 100%;
 }
 
+/* Sidebar */
 #sidebar {
     width: 220px;
     background-color: #f1f3f5;
@@ -117,7 +181,12 @@ li {
     color: #555;
     border-bottom: 1px solid #ccc;
     padding-bottom: 5px;
+    margin-top: 0; /* Remove default top margin */
     margin-bottom: 15px;
+}
+
+#sidebar-list {
+    /* Existing styles */
 }
 
 #sidebar-list li {
@@ -134,21 +203,23 @@ li {
     transition: background-color 0.3s;
 }
 
-#sidebar-list li a:hover {
+#sidebar-list li a:hover,
+#sidebar-list li a.active { /* Add active state for sidebar */
     background-color: #dde2e6;
     text-decoration: none;
+    font-weight: bold; /* Optional: make active link bold */
 }
 
 /* Main Content */
 #main-content {
-    flex-grow: 1; /* Takes remaining horizontal space */
+    flex-grow: 1;
     padding: 25px;
-    background-color: #ffffff; /* White background for content */
-    overflow-y: auto; /* Allow scrolling if content overflows */
+    background-color: #ffffff;
+    overflow-y: auto;
 }
-/* Adjust main content when there's no sidebar */
 #main-content.no-sidebar {
-   width: 100%; /* Take full width */
+   width: 100%;
+   padding: 25px; /* Ensure padding even without sidebar */
 }
 
 
@@ -156,50 +227,56 @@ li {
 #footer {
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap; /* Allow wrapping on small screens */
+    flex-wrap: wrap;
     gap: 20px;
-    padding: 25px;
+    padding: 25px 15px; /* Match container padding */
     border-top: 1px solid #ccc;
-    background-color: #343a40; /* Dark footer */
-    color: #f8f9fa; /* Light text */
+    background-color: #343a40;
+    color: #f8f9fa;
     margin-top: auto; /* Pushes footer to bottom */
+    flex-shrink: 0; /* Prevent footer from shrinking */
 }
 
 #footer h3 {
     color: #ffffff;
     font-size: 1.1em;
+    margin-top: 0; /* Remove default top margin */
     margin-bottom: 10px;
 }
 #footer a {
-    color: #adb5bd; /* Lighter link color */
+    color: #adb5bd;
 }
 #footer a:hover {
     color: #ffffff;
 }
+#footer ul { /* Remove default list styling in footer */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+#footer li {
+    margin-bottom: 5px;
+}
 
-#contact-info, #external-links, #copyright {
+#contact-info, #external-links, #copyright-section { /* Renamed for clarity */
     flex: 1;
-    min-width: 200px; /* Minimum width before wrapping */
+    min-width: 200px;
 }
 
-#external-links ul li {
-    margin: 5px 0;
-}
-
-#copyright {
+#copyright { /* Specific styles for the copyright text container */
     text-align: center;
     width: 100%;
     margin-top: 15px;
     font-size: 0.9em;
     color: #adb5bd;
-    border-top: 1px solid #495057; /* Separator line */
+    border-top: 1px solid #495057;
     padding-top: 15px;
 }
 
 
 /* Forms */
 form {
-    max-width: 600px; /* Limit form width */
+    max-width: 600px;
     margin: 20px 0;
     padding: 20px;
     background-color: #f8f9fa;
@@ -207,7 +284,7 @@ form {
     border-radius: 5px;
 }
 
-form p { /* Targets paragraphs generated by form.as_p */
+form p {
     margin-bottom: 15px;
 }
 
@@ -215,16 +292,11 @@ form label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+    color: #495057; /* Slightly softer label color */
 }
 
 form input[type="text"],
-form input[type="password"],
-form input[type="email"],
-form input[type="tel"],
-form input[type="datetime-local"],
-form input[type="url"],
-form input[type="number"],
-form input[type="uuid"],
+/* ... other input types ... */
 form select,
 form textarea {
     width: 100%;
@@ -232,16 +304,25 @@ form textarea {
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Include padding in width */
+    box-sizing: border-box;
     font-size: 1em;
+    background-color: #fff; /* Ensure white background */
+    transition: border-color 0.2s; /* Add transition */
 }
+/* Add focus state for inputs */
+form input:focus,
+form select:focus,
+form textarea:focus {
+    border-color: #0056b3; /* Highlight border on focus */
+}
+
 
 form textarea {
     min-height: 100px;
+    resize: vertical; /* Allow vertical resizing */
 }
 
-/* Style radio selects and checkboxes */
-form ul { /* Target lists generated by RadioSelect/CheckboxSelectMultiple */
+form ul {
     list-style: none;
     padding: 0;
     margin-bottom: 10px;
@@ -249,83 +330,105 @@ form ul { /* Target lists generated by RadioSelect/CheckboxSelectMultiple */
 form ul li {
     margin-bottom: 8px;
 }
-form ul label { /* Label associated with radio/checkbox */
+form ul label {
     display: inline-block;
     margin-left: 8px;
     font-weight: normal;
 }
 form input[type="radio"],
 form input[type="checkbox"] {
-   width: auto; /* Override width: 100% */
+   width: auto;
    margin-right: 5px;
    vertical-align: middle;
 }
 
+/* === Style Django Form Errors === */
+.errorlist {
+    color: #721c24; /* Error color */
+    background-color: #f8d7da; /* Light error background */
+    border: 1px solid #f5c6cb;
+    padding: 10px 15px;
+    margin: 10px 0;
+    list-style: none;
+    border-radius: 4px;
+}
+.errorlist li {
+    margin-bottom: 5px;
+}
+/* Style field-specific errors (if not using errorlist) */
+.form-field-error { /* Add this class to p tags or divs containing errors */
+     color: #721c24;
+     font-size: 0.9em;
+     margin-top: -5px; /* Adjust positioning */
+     margin-bottom: 10px;
+}
+
+
 /* Submit Button */
 form input[type="submit"],
-.button { /* General button style */
-    background-color: #007bff; /* Bootstrap primary blue */
+.button {
+    /* Existing styles */
+    background-color: #007bff;
     color: white;
     padding: 12px 25px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1.1em;
-    transition: background-color 0.3s;
-    text-decoration: none; /* For <a> tags styled as buttons */
-    display: inline-block; /* For <a> tags */
+    transition: background-color 0.3s, transform 0.1s; /* Add transform transition */
+    text-decoration: none;
+    display: inline-block;
     margin-top: 10px;
+    text-align: center; /* Center text */
 }
 
 form input[type="submit"]:hover,
 .button:hover {
     background-color: #0056b3;
-    text-decoration: none; /* Keep underline off on hover */
+    text-decoration: none;
     color: white;
 }
+form input[type="submit"]:active, /* Add active state */
+.button:active {
+    transform: translateY(1px); /* Simple press effect */
+}
+
+/* === Add Secondary/Destructive Button Styles === */
+.button-secondary {
+    background-color: #6c757d; /* Grey */
+}
+.button-secondary:hover {
+    background-color: #5a6268;
+}
+.button-danger {
+    background-color: #dc3545; /* Red */
+}
+.button-danger:hover {
+    background-color: #c82333;
+}
+
 
 /* Tables */
+.table-container { /* Optional: wrap tables for horizontal scrolling */
+    overflow-x: auto;
+    margin: 20px 0;
+}
 .match-table, .availability-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
+    /* margin: 20px 0; Removed if using .table-container */
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    background-color: #fff; /* Ensure table background */
 }
 
-.match-table th, .match-table td,
-.availability-table th, .availability-table td {
-    border: 1px solid #ddd;
-    padding: 10px 12px;
-    text-align: left;
-}
+/* ... existing table styles ... */
 
-.match-table thead, .availability-table thead {
-    background-color: #e9ecef; /* Header background */
-}
-
-.match-table th, .availability-table th {
-    font-weight: bold;
-    color: #333;
-}
-
-.match-table tbody tr:nth-child(even),
-.availability-table tbody tr:nth-child(even){
-    background-color: #f8f9fa; /* Zebra striping */
-}
-.match-table tbody tr:hover,
-.availability-table tbody tr:hover {
-    background-color: #e2e6ea;
-}
-
-/* Availability Status Styling */
-.availability-table .available {
-    color: green;
-    font-weight: bold;
-}
-.availability-table .unavailable {
-    color: red;
-    font-weight: bold;
-}
+/* === Utility Classes === */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.mb-1 { margin-bottom: 0.5rem; } /* Example margin bottom */
+.mt-1 { margin-top: 0.5rem; }    /* Example margin top */
+/* Add more as needed */
 
 
 /* Announcements and Lists */
@@ -336,14 +439,16 @@ form input[type="submit"]:hover,
 .announcement-list li:last-child, .teamsheet-list li:last-child, .match-list li:last-child {
     border-bottom: none;
 }
-.announcement-list small {
+.announcement-list small, .list-meta-info { /* More generic class */
     color: #666;
     display: block;
     margin-top: 5px;
+    font-size: 0.9em;
 }
 
-/* Card Style for Dashboard Sections */
+/* Card Style */
 .card {
+    /* Existing styles */
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
@@ -351,6 +456,18 @@ form input[type="submit"]:hover,
     margin-bottom: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
+.card-header { /* Optional card header style */
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    margin: -20px -20px 20px -20px; /* Extend to edges */
+    border-radius: 5px 5px 0 0;
+}
+.card-header h3, .card-header h2 {
+    margin: 0;
+    font-size: 1.3em;
+}
+
 
 /* Django Messages Framework */
 .messages {
@@ -363,79 +480,138 @@ form input[type="submit"]:hover,
     margin-bottom: 10px;
     border-radius: 4px;
     border: 1px solid transparent;
+    position: relative; /* For potential close button */
 }
-.messages li.success {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
+/* === Add Close Button (Optional, requires JS) === */
+/*
+.message-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
 }
-.messages li.info {
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
-    color: #0c5460;
+.message-close:hover {
+    opacity: 1;
 }
-.messages li.warning {
-    background-color: #fff3cd;
-    border-color: #ffeeba;
-    color: #856404;
-}
-.messages li.error {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
-}
+*/
+.messages li.success { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
+.messages li.info { background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
+.messages li.warning { background-color: #fff3cd; border-color: #ffeeba; color: #856404; }
+.messages li.error { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
 
 
 /* Responsive Design */
 @media (max-width: 992px) {
-     #content-area {
-        flex-direction: column; /* Stack sidebar on top of content */
+    #content-area {
+        flex-direction: column;
     }
     #sidebar {
-        width: 100%; /* Full width */
+        width: 100%;
         border-right: none;
         border-bottom: 1px solid #dee2e6;
-        height: auto; /* Auto height */
+        height: auto;
         padding: 15px;
         box-sizing: border-box;
     }
-     #sidebar h2 { display: none; } /* Optionally hide sidebar title */
-     #sidebar-list {
+    #sidebar h2 { display: none; }
+    #sidebar-list {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-     }
-     #sidebar-list li { margin: 0;}
+        padding: 0; /* Reset padding */
+    }
+    #sidebar-list li { margin: 0; }
+    #sidebar-list li a { padding: 6px 10px; /* Smaller padding */ } /* Adjust sidebar link padding */
 
     #main-content {
         padding: 20px;
     }
-    #header { padding: 10px 15px; }
+    #header { padding: 10px 0; /* Use container padding */ }
+    #header > * { padding-left: 15px; padding-right: 15px; }
     #header h1 { font-size: 1.5em; }
 
     #nav-list {
-        justify-content: center; /* Center nav items */
-        flex-wrap: wrap; /* Allow wrapping */
+        justify-content: center;
         padding: 0 10px;
-        gap: 5px 15px; /* Adjust gap */
+        gap: 5px 15px;
     }
-     #nav-list li a { font-size: 1em; padding: 6px 10px;}
+    #nav-list li a { font-size: 1em; padding: 6px 10px;}
 
     #footer {
-        flex-direction: column; /* Stack footer items */
+        flex-direction: column;
         text-align: center;
-        padding: 20px;
+        padding: 20px 15px; /* Match container padding */
+        gap: 15px; /* Reduce gap */
+    }
+    #footer > div { /* Ensure footer sections center text */
+        text-align: center;
     }
     #copyright { margin-top: 20px; padding-top: 20px; }
 }
 
 @media (max-width: 576px) {
+    h1 { font-size: 1.8em; } /* Adjust heading sizes for small screens */
+    h2 { font-size: 1.5em; }
+    h3 { font-size: 1.2em; }
+
+    body { font-size: 15px; } /* Slightly smaller base font */
+
+    .container { padding-left: 10px; padding-right: 10px; }
+    #header > *, #navbar #nav-list, #footer { padding-left: 10px; padding-right: 10px; }
+
     form { padding: 15px; }
-    form input[type="submit"], .button { width: 100%; padding: 12px; } /* Full width buttons */
+    form input[type="submit"], .button { width: 100%; padding: 12px; }
 
     .match-table, .availability-table { font-size: 0.9em; }
     .match-table th, .match-table td,
     .availability-table th, .availability-table td {
         padding: 8px;
+    }
+
+    #header { flex-direction: column; gap: 10px; } /* Stack header items */
+    #header .user-info { margin-top: 5px; }
+}
+
+/* === Print Styles === */
+@media print {
+    body {
+        background-color: #fff;
+        color: #000;
+        font-size: 12pt; /* Adjust for print */
+        line-height: 1.4;
+    }
+    #header, #navbar, #sidebar, #footer, form input[type="submit"], .button, .messages {
+        display: none !important; /* Hide non-content elements */
+    }
+    .container, #content-area, #main-content {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+        margin: 0;
+        display: block; /* Override flex */
+        box-shadow: none;
+        border: none;
+    }
+    a {
+        color: #000;
+        text-decoration: underline;
+    }
+    /* Show URL for links in print */
+    a[href^="http"]:after {
+        content: " (" attr(href) ")";
+        font-size: 90%;
+        color: #555;
+    }
+    /* Prevent page breaks inside tables/cards */
+    .card, table, tr, img {
+        page-break-inside: avoid;
+    }
+    h1, h2, h3 {
+        page-break-after: avoid;
     }
 }

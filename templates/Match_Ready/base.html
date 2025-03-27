@@ -2,81 +2,132 @@
 {% load static %}
 
 <html>
-    <head>
-        <link rel="stylesheet" href="{% static 'base.css' %}">
-        <title>
-            {% block title_block %}
-                Match Ready!
-            {% endblock %}
-        </title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    <title>
+        Match Ready! - {% block title_block %}Base Title{% endblock %}
+    </title>
+    {% block head_extra %}{% endblock %} {# Optional: For page-specific CSS/JS in head #}
+</head>
 
-    <body>
+<body>
+    <div class="container"> {# Main container for centering and max-width #}
 
-        <!-- Sidebar -->
-        <div id="sidebar">
-            <ul id="sidebar-list">
-                <!--The two here will be for players and coaches only-->
+        <!-- Header -->
+        <header id="header">
+            <h1><a href="{% url 'Match_Ready:index' %}">Match Ready!</a></h1>
+            <div class="user-info">
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'Match_Ready:my_team' %}">My Team</a></li>
+                    Logged in as: {{ user.username }} | <a href="{% url 'Match_Ready:logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'Match_Ready:login' %}">Login</a> | <a href="{% url 'Match_Ready:signup' %}">Sign Up</a>
                 {% endif %}
-                <li><a href="{% url 'Match_Ready:find_team' %}">Find new team</a></li>
+            </div>
+            {% block header_extra %}{% endblock %} {# Optional: For extra header content #}
+        </header>
 
-                <!--The two below will be for Coaches only check it in logic yet to be added-->
-
-                <li><a href="{% url 'Match_Ready:create_team' %}">Create team</a></li>
-                <li><a href="{% url 'Match_Ready:add_match' %}">Create match</a></li>
+        <!-- Navbar -->
+        <nav id="navbar">
+            <ul id="nav-list">
+                <li><a href="{% url 'Match_Ready:index' %}">Home</a></li>
+                <li><a href="{% url 'Match_Ready:about' %}">About</a></li>
+                <li><a href="{% url 'Match_Ready:contact' %}">Contact Us</a></li>
+                <li><a href="{% url 'Match_Ready:fixtures' %}">All Fixtures</a></li>
+                {# Add other common nav items here #}
             </ul>
-        </div>
+            {% block navbar_extra %}{% endblock %} {# Optional: For extra nav content #}
+        </nav>
 
-        <!-- Main Content -->
-        <div id="main-content">
-            
-            <!-- Navbar -->
-            <div id="navbar">
-                <ul id="nav-list">
-                    <!--This is for anyone-->
+        <!-- Content Area (Sidebar + Main) -->
+        <div id="content-area">
 
-                    <li><a href="{% url 'Match_Ready:index' %}">Home</a></li>
-                    <li><a href="{% url 'Match_Ready:about' %}">About</a></li>
-                    <li><a href="{% url 'Match_Ready:contact' %}">Contact us</a></li>
-                    <li><a href="{% url 'Match_Ready:fixtures' %}">Fixtures</a></li>
-                    <li><a href="{% url 'Match_Ready:login' %}">Login</a></li>
+            <!-- Sidebar -->
+            <aside id="sidebar">
+                <h2>Navigation</h2> {# Title for the sidebar section #}
+                <ul id="sidebar-list">
                     {% if user.is_authenticated %}
-                    <li><a href="{% url 'Match_Ready:logout' %}">Logout</a></li>
+                        {# Determine user role to show relevant links #}
+                        {# Note: This requires fetching the role in a context processor or every view #}
+                        {# Example placeholder logic: #}
+                        <li><a href="{% url 'Match_Ready:my_team' %}">My Team</a></li>
+                        <li><a href="{% url 'Match_Ready:upcoming_matches' %}">My Upcoming Matches</a></li>
+
+                        {# Coach specific? You'll need logic in views/context processor #}
+                        {% comment %}
+                        {% if user_is_coach %}
+                            <li><a href="{% url 'Match_Ready:create_team' %}">Create Team</a></li>
+                            <li><a href="{% url 'Match_Ready:add_match' %}">Create Match</a></li>
+                        {% endif %}
+                        {% endcomment %}
+
+                        {# Player specific? #}
+                        {# {% if user_is_player %} ... {% endif %} #}
+
+                    {% else %}
+                         <li><a href="{% url 'Match_Ready:find_team' %}">Find a Team</a></li>
                     {% endif %}
+
+                     {# Links visible whether logged in or not, if applicable #}
+                     <li><a href="{% url 'Match_Ready:find_team' %}">Find Team (Public?)</a></li>
+
+                    {# Example - Hardcoded for now, ideally make dynamic #}
+                    {% block sidebar_extra_links %}{% endblock %}
                 </ul>
-            </div> <br>
+            </aside>
 
-            <div id="main">
-                {% block body_block %}
-                {% endblock %}
+            <!-- Main Content -->
+            <main id="main-content">
+                 {# Display Django Messages Framework messages #}
                 {% if messages %}
-                    {% for message in messages %}
-                        <p style="color: red;">{{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-            </div>
-
-
-
-            <div id="footer">
-                <div id="contact-info">
-                    <p>Email: thisistoomuch@saddness.co.uk</p>
-                    <p>Phone: 07951278577</p>
-                    <p>Letter Box: 77 Handsome Av.</p>
-                </div>
-
-                <div id="external-links">
-                    <p>External Links</p>
-                    <ul>
-                        <li><a href="https://www.bbc.co.uk/sport">BBC Sport</a></li>
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
                     </ul>
-                </div>
-            </div>
-        </div>
-        <script src="{% static 'js/jquery-3.3.1.min.js' %}" crossorigin="anonymous"></script>
-        <script src="{% static 'js/script.js' %}"></script>
+                {% endif %}
 
-    </body>
+                {# Where child templates will insert their content #}
+                {% block body_block %}
+                    <p>This is the default content from base.html.</p>
+                {% endblock %}
+            </main>
+
+        </div> {# End #content-area #}
+
+        <!-- Footer -->
+        <footer id="footer">
+            <div id="contact-info">
+                <h3>Contact Info</h3>
+                <p>Email: <a href="mailto:help@matchready.com">help@matchready.com</a></p>
+                <p>Phone: +44 1234 567890</p>
+                {# Add more contact details #}
+            </div>
+
+            <div id="external-links">
+                <h3>Useful Links</h3>
+                <ul>
+                    <li><a href="{% url 'Match_Ready:about' %}">About Us</a></li>
+                    <li><a href="{% url 'Match_Ready:contact' %}">Contact</a></li>
+                    <li><a href="#">Privacy Policy</a></li> {# Example link #}
+                    <li><a href="#">Terms of Service</a></li> {# Example link #}
+                </ul>
+            </div>
+
+            <div id="copyright">
+                 © {% now "Y" %} Match Ready Project. All rights reserved.
+                 <p>Made by [Your Name/Group]</p> {# Give yourself credit! #}
+            </div>
+            {% block footer_extra %}{% endblock %} {# Optional: For extra footer content #}
+        </footer>
+
+    </div> {# End .container #}
+
+    {# Load JS at the end for better performance #}
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block scripts_extra %}{% endblock %} {# Optional: For page-specific JS #}
+
+</body>
 </html>
