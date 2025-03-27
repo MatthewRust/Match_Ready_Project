@@ -57,7 +57,7 @@ ROOT_URLCONF = 'Match_Ready_Project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_DIR,],
+        'DIRS': ['C:\\Users\\surface\\Downloads\\groupproject_01\\Match_Ready_Project\\templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -65,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'Match_Ready.context_processors.user_role',
             ],
         },
     },

@@ -10,8 +10,7 @@
       <ul id="sidebar-list">
         <li><a href="{% url 'Match_Ready:my_team' %}">My Team</a></li>
         <li><a href="{% url 'Match_Ready:find_team' %}">Find New Team</a></li>
-        {% if user.is_authenticated and user.defaultuser.__class__.__name__ ==
-        'Coach' %}
+        {% if user.is_authenticated and is_coach %}
         <li><a href="{% url 'Match_Ready:create_team' %}">Create Team</a></li>
         <li><a href="{% url 'Match_Ready:add_match' %}">Create Match</a></li>
         {% endif %}
