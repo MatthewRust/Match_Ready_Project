@@ -44,7 +44,6 @@ def user_register(request):
         form = UserForm(request.POST)  
         
         if form.is_valid():
-            # Create User
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             role = form.cleaned_data['role']
@@ -58,7 +57,6 @@ def user_register(request):
             elif role == 'player':
                 Player.objects.create(user=user)
             
-            # Authenticate and login
             authenticated_user = authenticate(username=username, password=password)
             if authenticated_user:
                 login(request, authenticated_user)
@@ -143,8 +141,6 @@ def find_team(request):
     context_dict = {'form':form,'user':user, 'role': role}
     return render(request,'Match_Ready/find_team.html',context=context_dict)
 
-#temperarrilly changed to see the working create team form
-
 @login_required
 def create_team(request):
     context_dict = {}
@@ -193,28 +189,20 @@ def upcoming_matches(request):
     if role.team is None:
         return redirect('Match_Ready:find_team')
     
-    home_matches = Match.objects.filter(team1=role.team, match_date__gte=datetime.now()).order_by('match_date')[:10]
-    away_matches = Match.objects.filter(team2=role.team, match_date__gte=datetime.now()).order_by('match_date')[:10]
+    now = datetime.now()
+    
+    home_matches = Match.objects.filter(team1=role.team, match_date__gte=now).order_by('match_date')[:10]
+    away_matches = Match.objects.filter(team2=role.team, match_date__gte=now).order_by('match_date')[:10]
     context_dict={'home_matches':home_matches,'away_matches':away_matches}
     return render(request,'Match_Ready/upcoming_matches.html',context=context_dict)
 
 
 def find_default_user(request, user):
-
-    print(get_user_model())
-
-
-    print(f"Checking for user: {user.username} (ID: {user.id})")  # Debugging
-
     user_role = Player.objects.filter(user=user).first() or \
                 Coach.objects.filter(user=user).first() or \
                 Fan.objects.filter(user=user).first()
-
     if user_role:
-        print(f"User role found: {user_role.__class__.__name__}")
         return user_role
-
-    print("User is not a Fan, Coach, or Player")
     return None
 
 def make_team(request):
