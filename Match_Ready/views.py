@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 
-from datetime import datetime
+from django.utils import timezone
 #create team, create match, find team, tests, ajax, javascript
 
 from Match_Ready.models import Fan, Player,Coach, Match, Team #Team sheets, announcements
@@ -30,13 +30,6 @@ def about (request):
 def contact(request):
     superusers = User.objects.filter(is_superuser=True)
     return render(request,'Match_Ready/contact.html', context={'superusers':superusers})
-
-def add_match(request):
-    return render(request, 'Match_Ready/add_match.html')
-
-def UpcomingMatches(request):
-    return render(request, 'Match_Ready/upcoming_matches.html')
-
 
 def user_register(request):
     registered = False
@@ -95,7 +88,7 @@ def user_logout(request):
     return redirect(reverse('Match_Ready:index'))
 
 def fixtures(request):
-    next_matches = Match.objects.filter(finished=False).order_by('match_day')[:15]
+    next_matches = Match.objects.filter(match_date__gte=timezone.now()).order_by('match_date')[:15]
     context_dict = {'upcoming_matches':next_matches}
     return render(request,'Match_Ready/UpcomingMatches.html',context=context_dict)
 
@@ -179,7 +172,7 @@ def upcoming_matches(request):
     if role.team is None:
         return redirect('Match_Ready:find_team')
     
-    now = datetime.now()
+    now = timezone.now()
     
     home_matches = Match.objects.filter(team1=role.team, match_date__gte=now).order_by('match_date')[:10]
     away_matches = Match.objects.filter(team2=role.team, match_date__gte=now).order_by('match_date')[:10]
