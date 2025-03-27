@@ -156,16 +156,17 @@ def find_team(request):
         form = FindTeamForm(request.POST)
         if form.is_valid():
             if role:
-                team_id = form.cleaned_data['team_id']
+                team_id = form.cleaned_data.get('team_id')
                 try:
-                    team = Team.objects.get(id=team_id)  
+                    team = Team.objects.get(team_id=team_id)  
                     role.team = team
                     role.save()
-                    return redirect(reverse('Match_Ready:my_team',kwargs={'username':user.username}))
+                    return redirect(reverse('Match_Ready:my_team'))
                 except Team.DoesNotExist:
-                    return HttpResponse("Team ID is incorrect")
+                    messages.error(request, "Invalid team id.")
+                    return redirect('Match_Ready:find_team') 
             else:
-                print(form.errors)
+                messages.error(request, "Error with finding team.")
     context_dict = {'form':form,'user':user, 'role': role}
     return render(request,'Match_Ready/find_team.html',context=context_dict)
 
