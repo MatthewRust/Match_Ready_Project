@@ -7,20 +7,23 @@
 {% block body_block %}
     <h1>Login</h1>
 
-    <div>
-        <form id="login" method="post" action="{% url 'Match_Ready:login' %}">
-            {% csrf_token %}
-            Username: <input type="text" name="username" size="50" /><br />
-            Password: <input type="password" name="password" size="50" /><br />
-            <input type="submit" value="Submit" />
-        </form>
-    </div>
+    {# Apply form styling #}
+    <form id="login_form" method="post" action="{% url 'Match_Ready:login' %}">
+        {% csrf_token %}
+        {# Use paragraphs or divs for spacing, matching CSS selectors if needed #}
+        <p>
+            <label for="id_username">Username:</label> {# Good practice to use labels #}
+            <input type="text" name="username" id="id_username" required> {# Use IDs matching labels #}
+        </p>
+        <p>
+            <label for="id_password">Password:</label>
+            <input type="password" name="password" id="id_password" required>
+        </p>
+        {# Apply button styling #}
+        <input type="submit" value="Login" class="button" />
+    </form>
 
-    {% if messages %}
-        {% for message in messages %}
-            <p style="color: red;">{{ message }}</p>
-        {% endfor %}
-    {% endif %}
+    {# Messages are now handled in base.html #}
 
     <p>Not already a member? <a href="{% url 'Match_Ready:signup' %}">Sign Up!</a></p>
 {% endblock %}

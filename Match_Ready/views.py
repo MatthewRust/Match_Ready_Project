@@ -1,3 +1,7 @@
+from .forms import AddMatch
+from .models import Match, Team
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpResponse
@@ -90,7 +94,7 @@ def user_logout(request):
 def fixtures(request):
     next_matches = Match.objects.filter(match_date__gte=timezone.now()).order_by('match_date')[:15]
     context_dict = {'upcoming_matches':next_matches}
-    return render(request,'Match_Ready/UpcomingMatches.html',context=context_dict)
+    return render(request,'Match_Ready/upcoming_matches.html',context=context_dict)
 
 
 @login_required
@@ -178,6 +182,47 @@ def upcoming_matches(request):
     away_matches = Match.objects.filter(team2=role.team, match_date__gte=now).order_by('match_date')[:10]
     context_dict={'home_matches':home_matches,'away_matches':away_matches}
     return render(request,'Match_Ready/upcoming_matches.html',context=context_dict)
+
+
+@login_required
+def add_match(request):
+    role = find_default_user(request, request.user)
+    if not isinstance(role, Coach):
+         messages.error(request, "Only coaches can add new matches.")
+         return redirect('Match_Ready:index')
+
+    if request.method == 'POST':
+        form = AddMatch(request.POST)
+        if form.is_valid():
+            try:
+                team1_id = form.cleaned_data['team1']
+                team2_id = form.cleaned_data['team2']
+                match_date = form.cleaned_data['match_date']
+
+                team1 = Team.objects.get(pk=team1_id)
+                team2 = Team.objects.get(pk=team2_id)
+
+                new_match = Match(team1=team1, team2=team2, match_date=match_date)
+                new_match.save()
+
+                messages.success(request, f"Match '{new_match}' created successfully!")
+                return redirect('Match_Ready:fixtures')
+
+            except Team.DoesNotExist:
+                messages.error(request, "One or both Team IDs entered are invalid.")
+                return render(request, 'Match_Ready/add_match.html', {'form': form})
+            except Exception as e:
+                messages.error(request, f"An error occurred: {e}")
+                return render(request, 'Match_Ready/add_match.html', {'form': form})
+        else:
+            print(form.errors)
+            messages.error(request, "Please correct the errors below.")
+            return render(request, 'Match_Ready/add_match.html', {'form': form})
+    else:
+        form = AddMatch()
+
+    return render(request, 'Match_Ready/add_match.html', {'form': form})
+
 
 
 def find_default_user(request, user):

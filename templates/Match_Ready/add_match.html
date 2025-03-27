@@ -4,16 +4,16 @@
     Add Match
 {% endblock %}
 
-
 {% block body_block %}
 
-    <h1>Create a new match</h1>
+    <h1>Create a New Match</h1>
 
-    <form id="add_match_form" method="post" action ="{% url 'Match_Ready:fixtures' %}">
+    <form id="add_match_form" method="post" action="{% url 'Match_Ready:add_match' %}">
         {% csrf_token %}
-        Team 1 <input type ="text" name ="team1" size="50" /><br />
-        Team 2 <input type ="text" name ="team2" size="50" /><br />
-        Date <input type ="datetime-local" name = "time" size = "40" /> <br />
+
+        {{ form.as_p }}
+
+        <input type="submit" value="Create Match" class="button" />
     </form>
 
 {% endblock %}

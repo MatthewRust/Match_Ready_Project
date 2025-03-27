@@ -4,28 +4,45 @@
     Sign Up
 {% endblock %}
 
-
 {% block body_block %}
-<h1>Sign Up</h1>
- 
- <div>
-     <form id="signup" method="post" action="{% url 'Match_Ready:signup' %}">
-         {% csrf_token %}
-         {{ form.username.label_tag }}<br>
-         {{ form.username }}<br><br>
- 
-         {{ form.password.label_tag }}<br>
-         {{ form.password }}<br><br>
- 
-         {{ form.role.label_tag }}
-         {% for radio in form.role %}
-             <div style="margin-bottom: 5px;">
-                 {{ radio.tag }} {{ radio.choice_label }}
-             </div>
-         {% endfor %}
-         <input type="submit" value="Submit" />
-     </form>
- 
- </div>
+    <h1>Sign Up</h1>
+
+    {# Apply form styling #}
+    <form id="signup_form" method="post" action="{% url 'Match_Ready:signup' %}">
+        {% csrf_token %}
+
+        {# Render form fields manually or using {{ form.as_p }} / {{ form.as_ul }} #}
+        {# Manual rendering gives more control for styling #}
+
+        <p>
+            {{ form.username.label_tag }}<br>
+            {{ form.username }}
+            {% if form.username.errors %}<span class="errorlist">{{ form.username.errors }}</span>{% endif %}
+        </p>
+
+        <p>
+            {{ form.password.label_tag }}<br>
+            {{ form.password }}
+            {% if form.password.errors %}<span class="errorlist">{{ form.password.errors }}</span>{% endif %}
+        </p>
+
+        {# Render radio buttons - the CSS has styles for ul li label input[type=radio] #}
+        <p>{{ form.role.label_tag }}</p>
+        <ul> {# Use UL to match CSS selector 'form ul' #}
+        {% for radio in form.role %}
+            <li>
+                 <label for="{{ radio.id_for_label }}">
+                    {{ radio.tag }}
+                    {{ radio.choice_label }}
+                 </label>
+            </li>
+        {% endfor %}
+        </ul>
+         {% if form.role.errors %}<span class="errorlist">{{ form.role.errors }}</span>{% endif %}
+
+
+        {# Apply button styling #}
+        <input type="submit" value="Sign Up" class="button" />
+    </form>
 
  {% endblock %}

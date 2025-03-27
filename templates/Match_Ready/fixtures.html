@@ -1,27 +1,44 @@
 {% extends 'Match_Ready/base.html' %}
 
 {% block title_block %}
-    Announcements
+    Fixtures
 {% endblock %}
 
-
 {% block body_block %}
- <h1>Fixtures</h1>
+    <h1>Fixtures</h1>
 
-    {% if are_matches %}
-    <h2>Up coming matches are: </h2>
+    {% if upcoming_matches %} {# Make sure view passes 'upcoming_matches' #}
+        <h2>Upcoming Matches</h2>
+
+        {# Apply table styling #}
+        <table class="match-table">
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Home Team</th>
+                    <th>Away Team</th>
+                    {# Add more columns if needed, e.g., Venue #}
+                </tr>
+            </thead>
+            <tbody>
+                {% for match in upcoming_matches %}
+                <tr>
+                    <td>{{ match.match_date|date:"D, d M Y H:i" }}</td> {# Format the date #}
+                    <td>{{ match.team1.name }}</td>
+                    <td>{{ match.team2.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
     {% else %}
-    <h2>There are no upcoming matches at the moment</h2>
-        {% if coach %}
-            <p>Check back later to see any changes or if you are a coach add a new match <a href="{% url 'Match_Ready:add_match' %}">here</a></p>
-        {% else %}
-            <p></p>
+        <p>There are no upcoming matches scheduled at the moment.</p>
+        {# Optional: Link for coaches to add matches #}
+        {% comment %}
+        {% if user_is_coach %}
+             <p>Check back later or <a href="{% url 'Match_Ready:add_match' %}" class="button">Add a New Match</a>.</p>
         {% endif %}
+        {% endcomment %}
     {% endif %}
 
-
-
-
-</div>
 {% endblock %}

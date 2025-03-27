@@ -2,79 +2,130 @@
 {% load static %}
 
 <html>
-    <head>
-        <link rel="stylesheet" href="{% static 'base.css' %}">
-        <title>
-            {% block title_block %}
-                Match Ready!
-            {% endblock %}
-        </title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    <title>
+        {% block title_block %}
+            Match Ready!
+        {% endblock %}
+    </title>
+</head>
 
-    <body>
+<body>
 
-        <!-- Sidebar -->
-        <div id="sidebar">
-            <ul id="sidebar-list">
-                <!--The two here will be for players and coaches only-->
-                {% if user.is_authenticated %}
-                    <li><a href="{% url 'Match_Ready:my_team' %}">My Team</a></li>
+    <!-- Header Section -->
+    <header id="header">
+        <h1><a href="{% url 'Match_Ready:index' %}">Match Ready</a></h1>
+        <div class="user-info">
+            {% if user.is_authenticated %}
+                Logged in as: {{ user.username }} | <a href="{% url 'Match_Ready:logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'Match_Ready:login' %}">Login</a> | <a href="{% url 'Match_Ready:signup' %}">Sign Up</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Navbar Section -->
+    <nav id="navbar">
+        <ul id="nav-list">
+            <li><a href="{% url 'Match_Ready:index' %}">Home</a></li>
+            <li><a href="{% url 'Match_Ready:about' %}">About</a></li>
+            <li><a href="{% url 'Match_Ready:contact' %}">Contact Us</a></li>
+            <li><a href="{% url 'Match_Ready:fixtures' %}">Fixtures</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'Match_Ready:my_team' %}">My Team</a></li>
+                <li><a href="{% url 'Match_Ready:find_team' %}">Join/Find Team</a></li>
+                {# Add logic here if only coaches can create teams/matches #}
+                {% comment %}
+                Example: Check if user is a coach (you'll need to pass this info from views or use a template tag)
+                {% if user_is_coach %}
+                    <li><a href="{% url 'Match_Ready:create_team' %}">Create Team</a></li>
+                    <li><a href="{% url 'Match_Ready:add_match' %}">Add Match</a></li>
                 {% endif %}
-                <li><a href="{% url 'Match_Ready:find_team' %}">Find new team</a></li>
+                {% endcomment %}
+                 {# Simplified version for now, showing if logged in #}
+                 <li><a href="{% url 'Match_Ready:create_team' %}">Create Team (Coach)</a></li>
+                 <li><a href="{% url 'Match_Ready:add_match' %}">Add Match (Coach)</a></li>
 
-                <!--The two below will be for Coaches only check it in logic yet to be added-->
+            {% endif %}
+        </ul>
+    </nav>
 
-                <li><a href="{% url 'Match_Ready:create_team' %}">Create team</a></li>
-                <li><a href="{% url 'Match_Ready:add_match' %}">Create match</a></li>
+    <!-- Container for Content Area -->
+    <div class="container">
+
+        <!-- Content Area (Sidebar + Main) -->
+        <div id="content-area">
+
+            <!-- Sidebar -->
+            {# Decide if you ALWAYS want a sidebar, or only on certain pages #}
+            {# You can use {% block sidebar %} {% endblock %} to make it optional #}
+            <aside id="sidebar">
+                <h2>Navigation</h2> {# Or specific context title #}
+                <ul id="sidebar-list">
+                    {% block sidebar_content %}
+                        {# Default sidebar items or placeholder #}
+                        {% if user.is_authenticated %}
+                             <li><a href="{% url 'Match_Ready:my_team' %}">My Team Details</a></li>
+                             <li><a href="{% url 'Match_Ready:upcoming_matches' %}">My Upcoming Matches</a></li>
+                             <li><a href="{% url 'Match_Ready:ListOfPlayers' %}">My Team Roster</a></li>
+                         {% else %}
+                             <li><a href="{% url 'Match_Ready:login' %}">Login to see Team Info</a></li>
+                         {% endif %}
+                         <li><a href="{% url 'Match_Ready:fixtures' %}">All Fixtures</a></li>
+                    {% endblock sidebar_content %}
+                </ul>
+            </aside>
+
+            <!-- Main Content -->
+            <main id="main-content">
+                 {# Display Django Messages #}
+                 {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {# Main block for page-specific content #}
+                <div id="main">
+                    {% block body_block %}
+                        {# Default content if block is empty #}
+                        <p>Welcome to the site. Select a section to get started.</p>
+                    {% endblock %}
+                </div>
+            </main>
+
+        </div> {# End #content-area #}
+
+    </div> {# End .container #}
+
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div id="contact-info">
+            <h3>Contact Info</h3>
+            <p>Email: contact@matchready.example</p>
+            <p>Phone: 123-456-7890</p>
+            <p>Address: 123 Sport St.</p>
+        </div>
+
+        <div id="external-links">
+            <h3>External Links</h3>
+            <ul>
+                <li><a href="https://www.bbc.co.uk/sport" target="_blank" rel="noopener noreferrer">BBC Sport</a></li>
+                 {# Add more relevant links #}
+                 <li><a href="#">League Website</a></li>
             </ul>
         </div>
 
-        <!-- Main Content -->
-        <div id="main-content">
-            
-            <!-- Navbar -->
-            <div id="navbar">
-                <ul id="nav-list">
-                    <!--This is for anyone-->
-
-                    <li><a href="{% url 'Match_Ready:index' %}">Home</a></li>
-                    <li><a href="{% url 'Match_Ready:about' %}">About</a></li>
-                    <li><a href="{% url 'Match_Ready:contact' %}">Contact us</a></li>
-                    <li><a href="{% url 'Match_Ready:fixtures' %}">Fixtures</a></li>
-                    <li><a href="{% url 'Match_Ready:login' %}">Login</a></li>
-                    {% if user.is_authenticated %}
-                    <li><a href="{% url 'Match_Ready:logout' %}">Logout</a></li>
-                    {% endif %}
-                </ul>
-            </div> <br>
-
-            <div id="main">
-                {% block body_block %}
-                {% endblock %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <p style="color: red;">{{ message }}</p>
-                    {% endfor %}
-                {% endif %}
-            </div>
-
-
-
-            <div id="footer">
-                <div id="contact-info">
-                    <p>Email: thisistoomuch@saddness.co.uk</p>
-                    <p>Phone: 07951278577</p>
-                    <p>Letter Box: 77 Handsome Av.</p>
-                </div>
-
-                <div id="external-links">
-                    <p>External Links</p>
-                    <ul>
-                        <li><a href="https://www.bbc.co.uk/sport">BBC Sport</a></li>
-                    </ul>
-                </div>
-            </div>
+        <div id="copyright">
+            <p>© {% now "Y" %} Match Ready Project. All rights reserved.</p>
         </div>
+    </footer>
 
-    </body>
+</body>
 </html>
