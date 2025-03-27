@@ -1,0 +1,19 @@
+{% extends 'Match_Ready/base.html' %}
+
+{% block title_block %}
+    Contact us
+{% endblock %}
+
+{% block body_block %}
+
+    {% if superusers %}
+    <h3>Our Superusers</h3>
+        <ul>
+            {% for superuser in superusers %}
+            <li>{{ superuser.username }} - Email: {{ superuser.email }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>We have no active superusers currently</p>
+    {% endif %}
+{% endblock %}

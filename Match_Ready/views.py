@@ -28,7 +28,8 @@ def about (request):
     return render(request, 'Match_Ready/about.html')
 
 def contact(request):
-    return render(request,'Match_Ready/contact.html')
+    superusers = User.objects.filter(is_superuser=True)
+    return render(request,'Match_Ready/contact.html', context={'superusers':superusers})
 
 def add_match(request):
     return render(request, 'Match_Ready/add_match.html')
