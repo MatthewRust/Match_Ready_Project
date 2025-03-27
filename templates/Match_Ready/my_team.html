@@ -1,6 +1,7 @@
 {% extends 'Match_Ready/base.html' %} {% block title_block %}My Team{% endblock
 %} {% block body_block %}
 <h1>My Team</h1>
+<<<<<<< HEAD
 {% if team %}
 <p><strong>Name:</strong> {{ team.name }}</p>
 <p><strong>Description:</strong> {{ team.description }}</p>
@@ -50,3 +51,11 @@
 {% endif %} {% else %}
 <p>You are not associated with any team.</p>
 {% endif %} {% endblock %}
+=======
+<div> 
+    <a href="{% url 'Match_Ready:ListOfPlayers' %}">People in your team</a>
+    <a href="{% url 'Match_Ready:UpcomingMatches' %}">Upcoming Matches</a>
+</div>
+
+{% endblock %}
+>>>>>>> 1c0304f99693c9ab95a0484d9660ebb4fed39580

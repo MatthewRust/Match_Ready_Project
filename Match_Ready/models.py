@@ -17,7 +17,12 @@ class DefaultUser(models.Model):
 
     def __str__(self):
         return self.user.username
+<<<<<<< HEAD
 
+=======
+    
+    
+>>>>>>> 1c0304f99693c9ab95a0484d9660ebb4fed39580
 class Coach(DefaultUser):
     team = models.OneToOneField(Team, on_delete=models.CASCADE, related_name="coach", null=True, blank=True)
 
@@ -28,7 +33,11 @@ class Player(DefaultUser):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="players", null=True, blank=True)
 
 class Fan(DefaultUser):
+<<<<<<< HEAD
     favourite_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="fans", null=True, blank=True)
+=======
+    team = models.ForeignKey(Team, related_name="fans", on_delete=models.CASCADE, null=True,blank=True)
+>>>>>>> 1c0304f99693c9ab95a0484d9660ebb4fed39580
 
 class Match(models.Model):
     team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_matches")

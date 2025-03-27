@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'Match_Ready/base.html' %} {% block title_block %}Login{% endblock %}
 {% block body_block %}
 <h1>Login</h1>
@@ -10,3 +11,31 @@
 </form>
 <p>Not a member? <a href="{% url 'Match_Ready:signup' %}">Sign Up</a></p>
 {% endblock %}
+=======
+{% extends 'Match_Ready/base.html' %}
+
+{% block title_block %}
+    Login
+{% endblock %}
+
+{% block body_block %}
+    <h1>Login</h1>
+
+    <div>
+        <form id="login" method="post" action="{% url 'Match_Ready:login' %}">
+            {% csrf_token %}
+            Username: <input type="text" name="username" size="50" /><br />
+            Password: <input type="password" name="password" size="50" /><br />
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: red;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <p>Not already a member? <a href="{% url 'Match_Ready:signup' %}">Sign Up!</a></p>
+{% endblock %}
+>>>>>>> 1c0304f99693c9ab95a0484d9660ebb4fed39580

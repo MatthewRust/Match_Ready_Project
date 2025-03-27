@@ -1,11 +1,19 @@
 {% extends 'Match_Ready/base.html' %}
 
-{% block title_block %} <!-- Logic for teams goes here -->
-    List of Poeple - {{ team.name }}
+{% block title_block %} 
+    List of People - {{ team.name }}
 {% endblock %}
 
 
 {% block body_block %}
     <h2>The people in team - {{ team.name }}</h2>
-
+    {% if list_of_players %}
+        <ul>
+        {% for player in list_of_players %}
+            <li>{{ player }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no players currently in this team</p>
+    {% endif %}
 {% endblock %}
