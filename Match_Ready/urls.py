@@ -15,12 +15,11 @@ urlpatterns = [
     path('find_team/', views.find_team, name='find_team'),
     path('login/', views.user_login, name='login'),
     path('make_team/', views.make_team, name='make_team'),
-    path('upcoming_matches/', views.upcoming_matches, name='UpcomingMatches'),
+    path('upcoming_matches/', views.upcoming_matches, name='upcoming_matches'),
     path('my_team/', views.my_team, name='my_team'),
     path('signup/', views.user_register, name='signup'),
-    path('player_list/', views.player_list, name='ListOfPlayers'),
+    path('player_list/', views.player_list, name='player_list'),
     path('add_match/', views.add_match, name='add_match' ),
     path('logout/', views.user_logout, name='logout'),
     path('contact/', views.contact, name='contact'),
-    path('attending_match', views.attending_match_view.as_view(), name='attending_match')
 ]

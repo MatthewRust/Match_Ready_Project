@@ -251,18 +251,3 @@ def make_team(request):
         messages.error(request, "Must be a coach to make a new match")
         return redirect('Match_Ready:index')
     return render('Match_Ready/make_team.html')
-
-class attending_match_view(View):
-    @method_decorator(login_required)
-    def get(self,request):
-        match_id = request.GET['match_id']
-
-        try:
-            match = Match.objects.get(id=match_id)
-        except Match.DoesNotExist:
-            return HttpResponse(-1)
-       
-        match.attendees = match.attendees + 1
-        match.save()
-
-        return JsonResponse({'attendees':match.attendees})
