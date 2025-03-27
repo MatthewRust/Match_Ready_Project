@@ -8,6 +8,7 @@
 
     <h1>Create a New Match</h1>
 
+<<<<<<< HEAD
     <form id="add_match_form" method="post" action="{% url 'Match_Ready:add_match' %}">
         {% csrf_token %}
 
@@ -17,3 +18,22 @@
     </form>
 
 {% endblock %}
+=======
+    <form id="add_match_form" method="post" action ="{% url 'Match_Ready:add_match' %}">
+        {% csrf_token %}
+        Team 1 ID<input type ="text" name ="team1" size="50" /><br />
+        Team 2 ID<input type ="text" name ="team2" size="50" /><br />
+        Date <input type ="datetime-local" name = "match_date" size = "40" /> <br />
+        <input type="submit" value="submit" />
+    </form>
+
+    {% if errors %} 
+    <div class ="errors">
+        {% for error in errors.values %}
+            {{ error }}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+{% endblock %}
+>>>>>>> dab80a84428ffb40fa6da5999b07714f12ce5af6

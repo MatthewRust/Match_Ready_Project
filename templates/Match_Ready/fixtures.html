@@ -7,6 +7,7 @@
 {% block body_block %}
     <h1>Fixtures</h1>
 
+<<<<<<< HEAD
     {% if upcoming_matches %} {# Make sure view passes 'upcoming_matches' #}
         <h2>Upcoming Matches</h2>
 
@@ -31,6 +32,15 @@
             </tbody>
         </table>
 
+=======
+    {% if upcoming_matches %}
+    <h2>Up coming matches are: </h2>
+    <ul>
+    {% for match in upcoming_matches %}
+        <li>{{ match }}</li>
+    {% endfor %}
+    </ul>
+>>>>>>> dab80a84428ffb40fa6da5999b07714f12ce5af6
     {% else %}
         <p>There are no upcoming matches scheduled at the moment.</p>
         {# Optional: Link for coaches to add matches #}
