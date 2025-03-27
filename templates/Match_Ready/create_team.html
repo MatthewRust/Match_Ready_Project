@@ -8,7 +8,6 @@
 {% block body_block %}
     <h1>Create a New Team</h1>
 
-
     <div>
     <form id="NewTeam" method="post" action="{% url 'Match_Ready:create_team' %}">
         {% csrf_token %}
