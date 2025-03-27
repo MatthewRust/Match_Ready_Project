@@ -8,9 +8,13 @@
 {% block body_block %}
  <h1>Fixtures</h1>
 
-    {% if are_matches %}
+    {% if upcoming_matches %}
     <h2>Up coming matches are: </h2>
-
+    <ul>
+    {% for match in upcoming_matches %}
+        <li>{{ match }}</li>
+    {% endfor %}
+    </ul>
     {% else %}
     <h2>There are no upcoming matches at the moment</h2>
         {% if coach %}
