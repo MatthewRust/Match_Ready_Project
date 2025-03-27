@@ -1,10 +1,26 @@
-{% extends 'Match_Ready/base.html' %} {% block title_block %}Contact Us{%
-endblock %} {% block body_block %}
-<h1>Contact Us</h1>
-<form method="post">
-  {% csrf_token %}
-  <label>Email:</label><input type="email" name="email" required /><br />
-  <label>Phone:</label><input type="tel" name="phone" /><br />
-  <input type="submit" value="Submit" />
-</form>
+{% extends 'Match_Ready/base.html' %}
+{% load static %} {# Optional: Load static if needed in this specific block #}
+
+{% block title_block %}
+    Contact Us
+{% endblock %} {# Ensure %} is present and add line breaks #}
+
+{% block body_block %}
+    <h1>Contact Us</h1>
+    {# Use a Django form here eventually for better validation/handling #}
+    {# For now, keeping the simple HTML form provided #}
+    <form method="post" action="{% url 'Match_Ready:contact' %}"> {# Added action URL #}
+        {% csrf_token %}
+        <p>
+            <label for="id_email">Email:</label> {# Use for attribute linking to id #}
+            <input type="email" name="email" required id="id_email" />
+        </p>
+        <p>
+            <label for="id_phone">Phone:</label>
+            <input type="tel" name="phone" id="id_phone" /> {# Optional field #}
+         </p>
+        <p>
+            <input type="submit" value="Submit" />
+        </p>
+    </form>
 {% endblock %}

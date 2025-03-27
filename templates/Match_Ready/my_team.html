@@ -1,61 +1,105 @@
-{% extends 'Match_Ready/base.html' %} {% block title_block %}My Team{% endblock
+{% extends 'Match_Ready/base.html' %} {% load static %} {% block title_block %}
+{% if team %}{{ team.name }} - My Team{% else %}My Team{% endif %} {% endblock
 %} {% block body_block %}
-<h1>My Team</h1>
-<<<<<<< HEAD
+<h1>My Team Dashboard</h1>
+
 {% if team %}
-<p><strong>Name:</strong> {{ team.name }}</p>
-<p><strong>Description:</strong> {{ team.description }}</p>
-<p><strong>Location:</strong> {{ team.location }}</p>
-<p><strong>Sport:</strong> {{ team.sport }}</p>
-<h2>Upcoming Matches</h2>
-<ul>
-  {% for match in matches %}
-  <li>
-    {{ match.team1.name }} vs {{ match.team2.name }} on {{ match.match_date }}
-  </li>
-  {% empty %}
-  <li>No upcoming matches.</li>
-  {% endfor %}
-</ul>
-<h2>Announcements</h2>
-<ul>
-  {% for announcement in announcements %}
-  <li>
-    {{ announcement.title }} - {{ announcement.content }} ({{
-    announcement.date_posted }})
-  </li>
-  {% empty %}
-  <li>No announcements.</li>
-  {% endfor %}
-</ul>
-<h2>Team Sheets</h2>
-<ul>
-  {% for team_sheet in team_sheets %}
-  <li>
-    <a href="{% url 'Match_Ready:team_sheet_detail' team_sheet.id %}"
-      >{{ team_sheet.match }}</a
-    >
-  </li>
-  {% empty %}
-  <li>No team sheets.</li>
-  {% endfor %}
-</ul>
-{% if user.defaultuser.__class__.__name__ == 'Coach' %}
-<a href="{% url 'Match_Ready:create_team_sheet' team.id %}"
-  >Create Team Sheet</a
->
-|
-<a href="{% url 'Match_Ready:create_announcement' team.id %}"
-  >Post Announcement</a
->
-{% endif %} {% else %}
-<p>You are not associated with any team.</p>
-{% endif %} {% endblock %}
-=======
-<div> 
-    <a href="{% url 'Match_Ready:ListOfPlayers' %}">People in your team</a>
-    <a href="{% url 'Match_Ready:UpcomingMatches' %}">Upcoming Matches</a>
+<div class="team-details card">
+  <h2>{{ team.name }}</h2>
+  <p><strong>Sport:</strong> {{ team.sport }}</p>
+  {% if team.location %}
+  <p><strong>Location:</strong> {{ team.location }}</p>
+  {% endif %} {% if team.description %}
+  <p><strong>Description:</strong> {{ team.description }}</p>
+  {% endif %}
+  <p>
+    <strong>Team ID:</strong> <code>{{ team.team_id }}</code> (Share this ID for
+    others to join)
+  </p>
 </div>
 
-{% endblock %}
->>>>>>> 1c0304f99693c9ab95a0484d9660ebb4fed39580
+<div class="team-section card">
+  <h2>Upcoming Matches</h2>
+  {% if matches %}
+  <ul class="match-list">
+    {% for match in matches %}
+    <li>
+      {{ match.match_date|date:"D, d M Y, H:i" }} - {{ match.team1.name }} vs {{
+      match.team2.name }} {% if match.location %}(at {{ match.location }}){%
+      endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No upcoming matches scheduled for your team.</p>
+  {% endif %}
+</div>
+
+<div class="team-section card">
+  <h2>Recent Announcements</h2>
+  {% if is_coach %} {# Use context variable #}
+  <a href="{% url 'Match_Ready:create_announcement' team.id %}" class="button"
+    >Post New Announcement</a
+  >
+  {% endif %} {% if announcements %}
+  <ul class="announcement-list">
+    {% for announcement in announcements|slice:":5" %} {# Show latest 5 #}
+    <li>
+      <strong>{{ announcement.title }}</strong> ({{
+      announcement.date_posted|date:"d M Y, H:i" }})
+      <p>{{ announcement.content|linebreaksbr }}</p>
+      <small>Posted by: {{ announcement.coach.user.username }}</small>
+    </li>
+    {% endfor %}
+  </ul>
+  <p>
+    <a href="{% url 'Match_Ready:announcements' team.id %}"
+      >View All Announcements</a
+    >
+  </p>
+  {% else %}
+  <p>No announcements posted for your team yet.</p>
+  {% endif %}
+</div>
+
+<div class="team-section card">
+  <h2>Team Sheets</h2>
+  {% if is_coach %} {# Use context variable #}
+  <a href="{% url 'Match_Ready:create_team_sheet' team.id %}" class="button"
+    >Create New Team Sheet</a
+  >
+  {% endif %} {% if team_sheets %}
+  <ul class="teamsheet-list">
+    {% for ts in team_sheets %}
+    <li>
+      <a href="{% url 'Match_Ready:team_sheet_detail' ts.id %}">
+        Sheet for Match: {{ ts.match.team1.name }} vs {{ ts.match.team2.name }}
+        on {{ ts.match.match_date|date:"d M Y" }}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  <p>
+    <a href="{% url 'Match_Ready:team_sheets' team.id %}"
+      >View All Team Sheets</a
+    >
+  </p>
+  {% else %}
+  <p>No team sheets available for your team yet.</p>
+  {% endif %}
+</div>
+
+{% else %} {# User is logged in but not associated with a team #}
+<p>You are not currently associated with any team.</p>
+{% if user_role == 'player' or user_role == 'fan' %}
+<p>
+  You can
+  <a href="{% url 'Match_Ready:find_team' %}">find and join an existing team</a>
+  using its Team ID.
+</p>
+{% endif %} {% if is_coach %}
+<p>
+  As a coach, you can
+  <a href="{% url 'Match_Ready:create_team' %}">create a new team</a>.
+</p>
+{% endif %} {% endif %} {% endblock %}

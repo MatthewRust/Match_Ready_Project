@@ -1,15 +1,23 @@
-{% extends 'Match_Ready/base.html' %} {% block title_block %}Team Sheets - {{
-team.name }}{% endblock %} {% block body_block %}
+{% extends 'Match_Ready/base.html' %} {% load static %} {% block title_block
+%}Team Sheets - {{ team.name }}{% endblock %} {% block body_block %}
 <h1>Team Sheets for {{ team.name }}</h1>
-<ul>
+
+{% if is_coach and user.coach.team == team %}
+<a href="{% url 'Match_Ready:create_team_sheet' team.id %}" class="button"
+  >Create New Team Sheet</a
+>
+{% endif %} {% if team_sheets %}
+<ul class="teamsheet-list">
   {% for team_sheet in team_sheets %}
   <li>
-    <a href="{% url 'Match_Ready:team_sheet_detail' team_sheet.id %}"
-      >{{ team_sheet.match }}</a
-    >
+    <a href="{% url 'Match_Ready:team_sheet_detail' team_sheet.id %}">
+      Sheet for Match: {{ team_sheet.match.team1.name }} vs {{
+      team_sheet.match.team2.name }} on {{ team_sheet.match.match_date|date:"d M
+      Y" }}
+    </a>
   </li>
-  {% empty %}
-  <li>No team sheets available.</li>
   {% endfor %}
 </ul>
-{% endblock %}
+{% else %}
+<p>No team sheets have been created for this team yet.</p>
+{% endif %} {% endblock %}

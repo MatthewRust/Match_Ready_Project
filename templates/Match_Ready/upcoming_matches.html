@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {% extends 'Match_Ready/base.html' %} {% block title_block %}Upcoming Matches{%
 endblock %} {% block body_block %}
 <h1>Upcoming Matches</h1>
@@ -12,44 +11,3 @@ endblock %} {% block body_block %}
   {% endfor %}
 </ul>
 {% endblock %}
-=======
-{% extends 'Match_Ready/base.html' %}
-
-{% block title_block %}
-    Upcoming Matches
-{% endblock %}
-
-
-{% block body_block %}
-    <h1>Upcoming matches for your team</h1>
-
-
-    <div>
-        <div>
-        <h2>Home Matches</h2>
-        <ul>
-            {% if home_matches %}
-                {% for match in home_matches %}
-                <li>{{ match }}</li>
-                {% endfor %}
-            {% else %}
-                <p>Your team has no home matches scheduled</p>
-            {% endif %}
-        </ul>
-        </div>
-        <div>
-        <h2>Away Matches</h2>
-        <ul>
-            {% if away_matches %}
-                {% for match in away_matches %}
-                    <li>{{ match }}</li>
-                {% endfor %}
-            {% else %}
-                <p>Your team has no away matches scheduled</p>
-            {% endif %}
-        </ul>
-        </div>
-    </div>
-
-{% endblock %}
->>>>>>> 1c0304f99693c9ab95a0484d9660ebb4fed39580

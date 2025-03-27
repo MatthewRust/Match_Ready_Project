@@ -1,14 +1,48 @@
-{% extends 'Match_Ready/base.html' %} {% block title_block %}Team Sheet - {{
-team_sheet.match }}{% endblock %} {% block body_block %}
-<h1>Team Sheet for {{ team_sheet.team.name }} in {{ team_sheet.match }}</h1>
-<ul>
-  {% for availability in availabilities %}
-  <li>
-    {{ availability.player.user.username }}: {% if availability.available
-    %}Available{% else %}Not Available{% endif %}
-  </li>
-  {% empty %}
-  <li>No players listed.</li>
-  {% endfor %}
-</ul>
+{% extends 'Match_Ready/base.html' %} {% load static %} {% block title_block
+%}Team Sheet Details{% endblock %} {% block body_block %}
+<h1>Team Sheet Details</h1>
+<h2>{{ team_sheet.team.name }}</h2>
+<p>
+  <strong>Match:</strong> {{ team_sheet.match.team1.name }} vs {{
+  team_sheet.match.team2.name }}
+</p>
+<p>
+  <strong>Date:</strong> {{ team_sheet.match.match_date|date:"D, d M Y, H:i" }}
+</p>
+{% if team_sheet.match.location %}
+<p><strong>Location:</strong> {{ team_sheet.match.location }}</p>
+{% endif %}
+
+<h3>Player Availability</h3>
+{% if availabilities %}
+<table class="availability-table">
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for availability in availabilities %}
+    <tr>
+      <td>{{ availability.player.user.username }}</td>
+      <td
+        class="{% if availability.available %}available{% else %}unavailable{% endif %}"
+      >
+        {% if availability.available %} Available {% else %} Not Available {%
+        endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No player availability information recorded for this team sheet.</p>
+{% endif %}
+
+<p>
+  <a href="{% url 'Match_Ready:team_sheets' team_sheet.team.id %}"
+    >« Back to Team Sheets List</a
+  >
+</p>
 {% endblock %}

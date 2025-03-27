@@ -1,8 +1,46 @@
-{% extends 'Match_Ready/base.html' %} {% block title_block %}About{% endblock %}
-{% block body_block %}
+{% extends 'Match_Ready/base.html' %} {% load static %} {% block title_block %}
+About MatchReady {% endblock %} {% block body_block %}
 <h1>About MatchReady</h1>
 <p>
-  MatchReady is a Django-based web app designed to centralize sports team
-  management for players, coaches, and fans.
+  MatchReady is a Django-based web application designed to centralize sports
+  team management, communication, and scheduling for players, coaches, and fans.
 </p>
+<h2>Key Features:</h2>
+<ul>
+  <li>
+    <strong>User Roles:</strong> Separate access and features for Players,
+    Coaches, and Fans.
+  </li>
+  <li>
+    <strong>Team Management:</strong> Coaches can create teams with unique IDs;
+    Players and Fans can join teams.
+  </li>
+  <li>
+    <strong>Team Sheets:</strong> Coaches manage player availability for
+    matches; Players and Fans can view published sheets.
+  </li>
+  <li>
+    <strong>Announcements:</strong> Coaches post important updates; Players and
+    Fans stay informed.
+  </li>
+  <li>
+    <strong>Match Schedules:</strong> Public view of upcoming matches and
+    team-specific schedules.
+  </li>
+</ul>
+<h2>Benefits:</h2>
+<ul>
+  <li>
+    <strong>Players:</strong> Never miss a match or important announcement.
+    Access team info easily.
+  </li>
+  <li>
+    <strong>Coaches:</strong> Save time managing schedules, availability, and
+    communication.
+  </li>
+  <li>
+    <strong>Fans:</strong> Stay engaged with easy access to match schedules and
+    team news.
+  </li>
+</ul>
 {% endblock %}
