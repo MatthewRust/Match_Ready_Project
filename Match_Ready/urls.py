@@ -22,4 +22,5 @@ urlpatterns = [
     path('add_match/', views.add_match, name='add_match' ),
     path('logout/', views.user_logout, name='logout'),
     path('contact/', views.contact, name='contact'),
+    path('attending_match', views.attending_match_view.as_view(), name='attending_match')
 ]

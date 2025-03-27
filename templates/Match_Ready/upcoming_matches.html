@@ -16,6 +16,20 @@
             {% if home_matches %}
                 {% for match in home_matches %}
                 <li>{{ match }}</li>
+                <li>
+                    <div>
+                        <strong id="attendance_count_{{ match.id }}">{{ match.attendees }}</strong> - Attendees
+                        {% if user.is_authenticated %}
+                        <button id="attendance_button_{{ match.id }}"
+                                data_match_id="{{ match.id }}"
+                                class="btn btn-primary btn-sm"
+                                type="button">
+                            <span data-feather="thumbs-up"></span>
+                            Attending Match
+                        </button>
+                        {% endif %}
+                    </div>
+                </li>
                 {% endfor %}
             {% else %}
                 <p>Your team has no home matches scheduled</p>
@@ -28,6 +42,20 @@
             {% if away_matches %}
                 {% for match in away_matches %}
                     <li>{{ match }}</li>
+                    <li>
+                        <div>
+                            <strong id="attendance_count_{{ match.id }}">{{ match.attendees }}</strong> <p> - Attendees</p>
+                            {% if user.is_authenticated %}
+                            <button id="attendance_button_{{ match.id }}"
+                                    data_match_id="{{ match.id }}"
+                                    class="btn btn-primary btn-sm"
+                                    type="button">
+                                <span data-feather="thumbs-up"></span>
+                                Attending Match
+                            </button>
+                            {% endif %}
+                        </div>
+                    </li>
                 {% endfor %}
             {% else %}
                 <p>Your team has no away matches scheduled</p>

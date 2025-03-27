@@ -33,11 +33,17 @@ class Match(models.Model):
     team1 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_matches")
     team2 = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="away_matches")
     match_date = models.DateTimeField()
+    attendees = models.IntegerField(default=0)
+    attendees_list = models.ManyToManyField(User, blank=True)
+
+    def add_attendee(self, user):
+        if user not in self.attendees_list.all():
+            self.attendees += 1
+            self.attendees_list.add(user)
+            self.save()
 
     class Meta:
         verbose_name_plural = 'Matches'
 
     def __str__(self):
         return f"{self.team1.name} vs {self.team2.name} on {self.match_date.strftime('%Y-%m-%d %H:%M')}"
-
-

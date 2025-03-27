@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.contrib import messages
-
+from django.utils.decorators import method_decorator
+from django.views import View
 from django.utils import timezone
 #create team, create match, find team, tests, ajax, javascript
 
@@ -250,3 +251,18 @@ def make_team(request):
         messages.error(request, "Must be a coach to make a new match")
         return redirect('Match_Ready:index')
     return render('Match_Ready/make_team.html')
+
+class attending_match_view(View):
+    @method_decorator(login_required)
+    def get(self,request):
+        match_id = request.GET['match_id']
+
+        try:
+            match = Match.objects.get(id=match_id)
+        except Match.DoesNotExist:
+            return HttpResponse(-1)
+       
+        match.attendees = match.attendees + 1
+        match.save()
+
+        return JsonResponse({'attendees':match.attendees})

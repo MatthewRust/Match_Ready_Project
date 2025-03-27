@@ -31,7 +31,7 @@ class AddMatch(forms.ModelForm):
     team1 = forms.IntegerField()
     team2 = forms.IntegerField()
     match_date = forms.DateTimeField()
-
+    attendies = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     class Meta:
         model = Match
         fields = ('team1', 'team2', 'match_date')
