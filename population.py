@@ -54,35 +54,12 @@ def create_users(created_teams):
                 coach_user.set_password(default_password)
                 coach_user.save()
                 coach = Coach.objects.create(user = coach_user)
+                coach.team = team
                 coach.save()
                 print(f"  Created User: {coach_username}")
             else:
                 print(f"  User already exists: {coach_username}")
 
-            coach_profile, coach_created = Coach.objects.get_or_create(
-                user=coach_user,
-                defaults={'team': team} # Assign team only if creating coach profile
-            )
-            if coach_created:
-                 print(f"    Created Coach profile for {coach_username}")
-                 # If user existed but profile didn't, ensure team is set
-                 if coach_profile.team != team:
-                     coach_profile.team = team
-                     coach_profile.save()
-                     print(f"    Associated Coach {coach_username} with {team.name}")
-            else:
-                 print(f"    Coach profile already exists for {coach_username}")
-                 # Optional: ensure coach is still linked to the correct team if script logic changes
-                 if coach_profile.team != team:
-                     print(f"    WARNING: Coach {coach_username} currently linked to {coach_profile.team}, not updating to {team.name} in this script.")
-                     # Or uncomment to force update:
-                     # coach_profile.team = team
-                     # coach_profile.save()
-                     # print(f"    Re-associated Coach {coach_username} with {team.name}")
-
-
-        except IntegrityError as e:
-            print(f"  Error processing coach {coach_username}: {e}")
         except Exception as e: # Catch other potential errors
             print(f"  Unexpected error processing coach {coach_username}: {e}")
 
@@ -96,20 +73,15 @@ def create_users(created_teams):
                 if user_created:
                     player_user.set_password(default_password)
                     player_user.save()
-                    player = Player.objects.create(user=player_user)
+                    player = Player.objects.create(user = player_user)
+                    player.team = team
                     player.save()
                     print(f"  Created User: {player_username}")
+                else:
+                    print(f"  User already exists: {player_username}")
 
-                player_profile, player_created = Player.objects.get_or_create(
-                    user=player_user,
-                    defaults={'team': team}
-                )
-                # Optional: print if profile created/existed
-
-            except IntegrityError as e:
-                print(f"  Error processing player {player_username}: {e}")
-            except Exception as e:
-                print(f"  Unexpected error processing player {player_username}: {e}")
+            except Exception as e: # Catch other potential errors
+                print(f"  Unexpected error processing coach {player_username}: {e}")
 
 
         # --- Fans ---
@@ -121,16 +93,15 @@ def create_users(created_teams):
                 if user_created:
                     fan_user.set_password(default_password)
                     fan_user.save()
-                    fan = Fan.objects.create(user=fan_user)
+                    fan = Fan.objects.create(user = fan_user)
+                    fan.team = team
                     fan.save()
                     print(f"  Created User: {fan_username}")
+                else:
+                    print(f"  User already exists: {fan_username}")
 
-                
-
-            except IntegrityError as e:
-                 print(f"  Error processing fan {fan_username}: {e}")
-            except Exception as e:
-                print(f"  Unexpected error processing fan {fan_username}: {e}")
+            except Exception as e: # Catch other potential errors
+                print(f"  Unexpected error processing coach {fan_username}: {e}")
 
 
 def create_matches(created_teams):
@@ -141,7 +112,7 @@ def create_matches(created_teams):
     current_date = timezone.now()
 
     for i in range(0, len(team_ids), 2):
-        if i + 1 < len(team_ids): 
+        if i + 1 < len(team_ids):
             team1_id = team_ids[i]
             team2_id = team_ids[i+1]
 
