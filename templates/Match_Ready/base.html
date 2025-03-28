@@ -44,38 +44,31 @@
         <div id="content-area">
 
             <!-- Sidebar -->
+            {% if user.is_authenticated %}
             <aside id="sidebar">
                 <h2>Navigation</h2> {# Title for the sidebar section #}
                 <ul id="sidebar-list">
-                    {% if user.is_authenticated %}
                         {# Determine user role to show relevant links #}
                         {# Note: This requires fetching the role in a context processor or every view #}
                         {# Example placeholder logic: #}
                         <li><a href="{% url 'Match_Ready:my_team' %}">My Team</a></li>
-                        <li><a href="{% url 'Match_Ready:upcoming_matches' %}">My Upcoming Matches</a></li>
+                        <li><a href="{% url 'Match_Ready:find_team' %}">Find Team</a></li>
 
-                        {# Coach specific? You'll need logic in views/context processor #}
-                        {% comment %}
+                        {# only available if a user is a coach #}
                         {% if user_is_coach %}
                             <li><a href="{% url 'Match_Ready:create_team' %}">Create Team</a></li>
                             <li><a href="{% url 'Match_Ready:add_match' %}">Create Match</a></li>
                         {% endif %}
-                        {% endcomment %}
 
                         {# Player specific? #}
                         {# {% if user_is_player %} ... {% endif %} #}
 
-                    {% else %}
-                         <li><a href="{% url 'Match_Ready:find_team' %}">Find a Team</a></li>
-                    {% endif %}
 
-                     {# Links visible whether logged in or not, if applicable #}
-                     <li><a href="{% url 'Match_Ready:find_team' %}">Find Team (Public?)</a></li>
 
-                    {# Example - Hardcoded for now, ideally make dynamic #}
                     {% block sidebar_extra_links %}{% endblock %}
                 </ul>
             </aside>
+            {% endif %}
 
             <!-- Main Content -->
             <main id="main-content">
@@ -94,7 +87,7 @@
                 {% endblock %}
             </main>
 
-        </div> {# End #content-area #}
+        </div> 
 
         <!-- Footer -->
         <footer id="footer">
@@ -102,7 +95,6 @@
                 <h3>Contact Info</h3>
                 <p>Email: <a href="mailto:help@matchready.com">help@matchready.com</a></p>
                 <p>Phone: +44 1234 567890</p>
-                {# Add more contact details #}
             </div>
 
             <div id="external-links">
@@ -117,7 +109,7 @@
 
             <div id="copyright">
                  © {% now "Y" %} Match Ready Project. All rights reserved.
-                 <p>Made by [Your Name/Group]</p> {# Give yourself credit! #}
+                 <p>Made by Group 12E</p> 
             </div>
             {% block footer_extra %}{% endblock %} {# Optional: For extra footer content #}
         </footer>
@@ -125,7 +117,9 @@
     </div> {# End .container #}
 
     {# Load JS at the end for better performance #}
+    <script src="{% static 'js/jquery.min.js' %}"
     <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/ajax.js' %}"></script>
     {% block scripts_extra %}{% endblock %} {# Optional: For page-specific JS #}
 
 </body>

@@ -216,8 +216,8 @@ def my_team(request):
     role = find_default_user(request, user)
     if role is None:
         # This shouldn't happen for a logged-in user if signup creates roles correctly
-        messages.error(request, "User role not found. Please contact support.")
-        return redirect('Match_Ready:index')
+        messages.error(request, "Logged in as something other than a Coach, Player or Fan, try again.")
+        return redirect('Match_Ready:login')
 
     if not hasattr(role, 'team') or role.team is None:
         messages.info(request, "You need to join or create a team first.")

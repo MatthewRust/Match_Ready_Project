@@ -8,9 +8,13 @@
 {% block body_block %}
 
 <h1>My Team</h1>
+<h2>{{ team.name }}</h2>
+<p>Team ID - {{ team.team_id }}</p>
 <div> 
-    <a href="{% url 'Match_Ready:player_list' %}">People in your team</a>
-    <a href="{% url 'Match_Ready:upcoming_matches' %}">Upcoming Matches</a>
+    <ul>
+    <li><a href="{% url 'Match_Ready:player_list' %}">People in your team</a></li>
+    <li><a href="{% url 'Match_Ready:upcoming_matches' %}">Upcoming Matches</a></li>
+    </ul>
 </div>
 
 {% endblock %}
