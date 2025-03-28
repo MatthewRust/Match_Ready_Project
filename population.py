@@ -11,7 +11,6 @@ from django.db import IntegrityError # Import IntegrityError
 
 import sys
 
-# django.setup() # No need to call setup twice
 
 def create_teams():
     print("--- Creating/Checking Teams ---")
@@ -47,20 +46,19 @@ def create_users(created_teams):
     for team_id, team in created_teams.items():
         print(f"\nProcessing users for {team.name} ({team.team_id})...")
 
-        # --- Coach ---
         coach_username = f"{team.team_id}_coach"
         coach_user = None
         try:
-            # Try to get or create the User
             coach_user, user_created = User.objects.get_or_create(username=coach_username)
             if user_created:
                 coach_user.set_password(default_password)
                 coach_user.save()
+                coach = Coach.objects.create(user = coach_user)
+                coach.save()
                 print(f"  Created User: {coach_username}")
             else:
                 print(f"  User already exists: {coach_username}")
 
-            # Get or create the Coach role associated with the user
             coach_profile, coach_created = Coach.objects.get_or_create(
                 user=coach_user,
                 defaults={'team': team} # Assign team only if creating coach profile
@@ -98,11 +96,10 @@ def create_users(created_teams):
                 if user_created:
                     player_user.set_password(default_password)
                     player_user.save()
+                    player = Player.objects.create(user=player_user)
+                    player.save()
                     print(f"  Created User: {player_username}")
-                # else: # Optional: Print if user existed
-                #     print(f"  User already exists: {player_username}")
 
-                # Get or create the Player role
                 player_profile, player_created = Player.objects.get_or_create(
                     user=player_user,
                     defaults={'team': team}
@@ -124,16 +121,11 @@ def create_users(created_teams):
                 if user_created:
                     fan_user.set_password(default_password)
                     fan_user.save()
+                    fan = Fan.objects.create(user=fan_user)
+                    fan.save()
                     print(f"  Created User: {fan_username}")
-                # else: # Optional: Print if user existed
-                #     print(f"  User already exists: {fan_username}")
 
-                # Get or create the Fan role
-                fan_profile, fan_created = Fan.objects.get_or_create(
-                    user=fan_user,
-                    defaults={'team': team}
-                )
-                # Optional: print if profile created/existed
+                
 
             except IntegrityError as e:
                  print(f"  Error processing fan {fan_username}: {e}")
@@ -143,33 +135,25 @@ def create_users(created_teams):
 
 def create_matches(created_teams):
     print("\n--- Creating/Checking Matches ---")
-    # Clear existing matches to avoid duplicates if needed (Use with caution!)
-    # Match.objects.all().delete()
-    # print("  Cleared existing matches.")
 
     matches_to_create = []
     team_ids = list(created_teams.keys())
     current_date = timezone.now()
 
-    # Create pairings (simple example: T1 vs T2, T3 vs T4)
     for i in range(0, len(team_ids), 2):
-        if i + 1 < len(team_ids): # Ensure there's a pair
+        if i + 1 < len(team_ids): 
             team1_id = team_ids[i]
             team2_id = team_ids[i+1]
 
             team1 = created_teams[team1_id]
             team2 = created_teams[team2_id]
 
-            # Make match date unique enough to check with get_or_create if desired
-            # Using timedelta based on index 'i'
             match_date = current_date + timezone.timedelta(days=i*3 + 7) # Spread out dates more
 
-            # Use get_or_create for matches to avoid duplicates if script is rerun
             match, created = Match.objects.get_or_create(
                 team1=team1,
                 team2=team2,
                 match_date=match_date,
-                # Add defaults if needed, e.g., defaults={'location': 'Default Venue'}
             )
             if created:
                 print(f"  Created Match: {match}")

@@ -18,6 +18,4 @@ urlpatterns = [
     path('my_team/players/', views.player_list, name='player_list'),
     path('add_match/', views.add_match, name='add_match' ),
     path('upcoming_matches/', views.upcoming_matches, name='upcoming_matches'),
-    path('attend_match_ajax/', views.attend_match_ajax, name='attend_match_ajax'),
-    path('make_team/', views.make_team, name='make_team'),
 ]

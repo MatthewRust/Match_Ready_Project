@@ -12,30 +12,7 @@
         <ul class="match-list">
         {% for match in upcoming_matches %}
             <li>
-                {{ match }} {# Display basic match info (e.g., Team A vs Team B on Date) #}
-
-                {# AJAX Attend Button - Only show if user is logged in #}
-                {% if user.is_authenticated %}
-                    {# Check if user is already attending this specific match using the context variable #}
-                    {% if match.id in user_attending_match_ids %}
-                        {# User is attending: Show disabled button #}
-                        <button class="button attend-button" data-match-id="{{ match.id }}" disabled>
-                            Attending
-                        </button>
-                    {% else %}
-                        {# User is NOT attending: Show active button #}
-                        <button class="button attend-button" data-match-id="{{ match.id }}">
-                            Attend Match
-                        </button>
-                    {% endif %}
-                    {# Display current attendee count #}
-                    <span class="attendee-count" data-match-id="{{ match.id }}">{{ match.attendees }}</span> attendees
-                {% else %}
-                     {# User not logged in: Show login link #}
-                     - <a href="{% url 'Match_Ready:login' %}?next={{ request.path }}">Login to attend</a>
-                {% endif %}
-                {# Span to show AJAX status messages (success/error) #}
-                <span class="attend-status" data-match-id="{{ match.id }}"></span>
+                {{ match }} 
             </li>
         {% endfor %}
         </ul>

@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <div class="container"> {# Main container #}
+    <div class="container"> 
 
         <!-- Header -->
         <header id="header">
@@ -26,7 +26,6 @@
             </div>
         </header>
 
-        <!-- Navbar -->
         <nav id="navbar">
             <ul id="nav-list">
                 <li><a href="{% url 'Match_Ready:index' %}">Home</a></li>
@@ -36,21 +35,15 @@
             </ul>
         </nav>
 
-        <!-- Content Area (Sidebar + Main) -->
         <div id="content-area">
 
-            <!-- Sidebar -->
             {% if user.is_authenticated %}
             <aside id="sidebar">
-                <h2>Navigation</h2> {# Title for the sidebar #}
+                <h2>Navigation</h2> 
                 <ul id="sidebar-list">
-                        {# Determine user role to show relevant links #}
-                        {# Note: This requires fetching the role in a context processor or every view #}
-                        {# Example placeholder logic: #}
                         <li><a href="{% url 'Match_Ready:my_team' %}">My Team</a></li>
                         <li><a href="{% url 'Match_Ready:find_team' %}">Find Team</a></li>
 
-                        {# only available if a user is a coach #}
                         {% if user_is_coach %}
                             <li><a href="{% url 'Match_Ready:create_team' %}">Create Team</a></li>
                             <li><a href="{% url 'Match_Ready:add_match' %}">Create Match</a></li>
@@ -61,9 +54,7 @@
             </aside>
             {% endif %}
 
-            <!-- Main Content -->
             <main id="main-content">
-                 {# Display Django Messages #}
                 {% if messages %}
                     <ul class="messages">
                         {% for message in messages %}
@@ -72,7 +63,6 @@
                     </ul>
                 {% endif %}
 
-                {# Where child templates insert their content #}
                 {% block body_block %}
                     <p>This is the default content from base.html.</p>
                 {% endblock %}
@@ -80,7 +70,6 @@
 
         </div> 
 
-        <!-- Footer -->
         <footer id="footer">
             <div id="contact-info">
                 <h3>Contact Info</h3>
@@ -93,8 +82,8 @@
                 <ul>
                     <li><a href="{% url 'Match_Ready:about' %}">About Us</a></li>
                     <li><a href="{% url 'Match_Ready:contact' %}">Contact</a></li>
-                    <li><a href="#">Privacy Policy</a></li> {# Example link #}
-                    <li><a href="#">Terms of Service</a></li> {# Example link #}
+                    <li><a href="#">Privacy Policy</a></li> 
+                    <li><a href="#">Terms of Service</a></li> 
                 </ul>
             </div>
 
@@ -106,10 +95,6 @@
 
     </div> {# End .container #}
 
-    {# Load JS  #}
-    <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
-    <script src="{% static 'js/ajax.js' %}"></script>
-
 </body>
 </html>
