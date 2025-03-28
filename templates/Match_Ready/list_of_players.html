@@ -5,8 +5,15 @@
 {% endblock %}
 
 {% block body_block %}
-    <h2>The people in team - {{ team.name }}</h2>
+    <h3>The people in team - {{ team.name }}</h3>
+    {% if team_coach %}
+    <h4>Coach</h4>
+    <p>{{ team_coach }}</p>
+    {% else %}
+    <p>There is no coach right now</p>
+    {% endif %}
     {% if list_of_players %}
+        <h4>Players</h4>
         <ul>
         {% for player in list_of_players %}
             <li>{{ player }}</li>
@@ -14,5 +21,15 @@
         </ul>
     {% else %}
         <p>There are no players currently in this team</p>
+    {% endif %}
+    {% if list_of_fans %}
+        <h4>Fans</h4>
+        <ul>
+        {% for fan in list_of_fans %}
+        <li>{{ fan }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no fans right now</p>
     {% endif %}
 {% endblock %}
