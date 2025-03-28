@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* Modern font stack */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     line-height: 1.6;
     background-color: #f8f9fa;
     color: #333;
@@ -13,21 +13,20 @@ html {
   box-sizing: border-box;
 }
 *, *:before, *:after {
-  box-sizing: inherit; /* Makes width/height include padding and border */
+  box-sizing: inherit;
 }
 
 
-h1, h2, h3, h4, h5, h6 { /* Include lower heading levels */
+h1, h2, h3, h4, h5, h6 {
     color: #0056b3;
-    margin-top: 1em; /* Add some top margin */
+    margin-top: 1em;
     margin-bottom: 0.5em;
-    line-height: 1.3; /* Slightly tighter line height for headings */
+    line-height: 1.3;
 }
 
 h1 { font-size: 2.2em; }
 h2 { font-size: 1.8em; }
 h3 { font-size: 1.4em; }
-/* Add h4, h5, h6 sizes if needed */
 
 a {
     color: #0056b3;
@@ -40,7 +39,6 @@ a:hover {
     text-decoration: underline;
 }
 
-/* === Add Focus Styles for Accessibility === */
 a:focus,
 button:focus,
 input:focus,
@@ -48,10 +46,8 @@ select:focus,
 textarea:focus {
     outline: 2px solid #0056b3;
     outline-offset: 2px;
-    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.25); /* Optional glow */
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.25);
 }
-/* Customize focus styles as needed */
-
 
 ul {
     list-style-type: none;
@@ -62,38 +58,35 @@ li {
     margin-bottom: 0.5em;
 }
 
-/* === Image Responsiveness === */
 img {
     max-width: 100%;
     height: auto;
-    display: block; /* Prevents bottom space */
+    display: block;
 }
 
 
 .container {
     width: 100%;
-    max-width: 1400px; /* Adjust as needed */
-    margin: 0 auto; /* Centers the container */
-    padding-left: 15px;  /* Add horizontal padding */
-    padding-right: 15px; /* Add horizontal padding */
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-left: 15px;
+    padding-right: 15px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
-
-/* Header */
 #header {
     background-color: #0056b3;
     color: white;
-    padding: 15px 0; /* Use container padding */
+    padding: 15px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    flex-shrink: 0; /* Prevent header from shrinking */
+    flex-shrink: 0;
 }
-/* Adjust padding within container */
+
 #header > * {
     padding-left: 15px;
     padding-right: 15px;
@@ -110,13 +103,13 @@ img {
     text-decoration: none;
 }
 #header h1 a:hover {
-    text-decoration: none; /* Keep header link un-underlined */
+    text-decoration: none;
     opacity: 0.9;
 }
 #header .user-info {
     font-size: 0.9em;
 }
-#header .user-info a { /* Style links in user info */
+#header .user-info a {
     color: #e9ecef;
     margin-left: 10px;
 }
@@ -124,23 +117,21 @@ img {
     color: #ffffff;
 }
 
-
-/* Navbar */
 #navbar {
     background-color: #e9ecef;
-    padding: 10px 0; /* Use container padding */
+    padding: 10px 0;
     border-bottom: 1px solid #dee2e6;
-    flex-shrink: 0; /* Prevent navbar from shrinking */
+    flex-shrink: 0;
 }
 
 #nav-list {
     list-style-type: none;
     margin: 0;
-    padding: 0 15px; /* Align with container padding */
+    padding: 0 15px;
     display: flex;
     justify-content: flex-start;
     gap: 20px;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    flex-wrap: wrap;
 }
 
 #nav-list li a {
@@ -150,24 +141,22 @@ img {
     padding: 8px 12px;
     border-radius: 4px;
     transition: background-color 0.3s, color 0.3s;
-    display: block; /* Ensure padding applies correctly */
+    display: block;
 }
 
 #nav-list li a:hover,
-#nav-list li a.active { /* Add an .active class for current page */
+#nav-list li a.active {
     background-color: #0056b3;
     color: white;
     text-decoration: none;
 }
 
-/* Content Area (Sidebar + Main Content) */
 #content-area {
     display: flex;
     flex-grow: 1;
     width: 100%;
 }
 
-/* Sidebar */
 #sidebar {
     width: 220px;
     background-color: #f1f3f5;
@@ -181,12 +170,8 @@ img {
     color: #555;
     border-bottom: 1px solid #ccc;
     padding-bottom: 5px;
-    margin-top: 0; /* Remove default top margin */
+    margin-top: 0;
     margin-bottom: 15px;
-}
-
-#sidebar-list {
-    /* Existing styles */
 }
 
 #sidebar-list li {
@@ -204,13 +189,12 @@ img {
 }
 
 #sidebar-list li a:hover,
-#sidebar-list li a.active { /* Add active state for sidebar */
+#sidebar-list li a.active {
     background-color: #dde2e6;
     text-decoration: none;
-    font-weight: bold; /* Optional: make active link bold */
+    font-weight: bold;
 }
 
-/* Main Content */
 #main-content {
     flex-grow: 1;
     padding: 25px;
@@ -219,28 +203,26 @@ img {
 }
 #main-content.no-sidebar {
    width: 100%;
-   padding: 25px; /* Ensure padding even without sidebar */
+   padding: 25px;
 }
 
-
-/* Footer */
 #footer {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 20px;
-    padding: 25px 15px; /* Match container padding */
+    padding: 25px 15px;
     border-top: 1px solid #ccc;
     background-color: #343a40;
     color: #f8f9fa;
-    margin-top: auto; /* Pushes footer to bottom */
-    flex-shrink: 0; /* Prevent footer from shrinking */
+    margin-top: auto;
+    flex-shrink: 0;
 }
 
 #footer h3 {
     color: #ffffff;
     font-size: 1.1em;
-    margin-top: 0; /* Remove default top margin */
+    margin-top: 0;
     margin-bottom: 10px;
 }
 #footer a {
@@ -249,7 +231,7 @@ img {
 #footer a:hover {
     color: #ffffff;
 }
-#footer ul { /* Remove default list styling in footer */
+#footer ul {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -258,12 +240,12 @@ img {
     margin-bottom: 5px;
 }
 
-#contact-info, #external-links, #copyright-section { /* Renamed for clarity */
+#contact-info, #external-links, #copyright-section {
     flex: 1;
     min-width: 200px;
 }
 
-#copyright { /* Specific styles for the copyright text container */
+#copyright {
     text-align: center;
     width: 100%;
     margin-top: 15px;
@@ -273,8 +255,6 @@ img {
     padding-top: 15px;
 }
 
-
-/* Forms */
 form {
     max-width: 600px;
     margin: 20px 0;
@@ -292,11 +272,10 @@ form label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: #495057; /* Slightly softer label color */
+    color: #495057;
 }
 
 form input[type="text"],
-/* ... other input types ... */
 form select,
 form textarea {
     width: 100%;
@@ -306,20 +285,20 @@ form textarea {
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 1em;
-    background-color: #fff; /* Ensure white background */
-    transition: border-color 0.2s; /* Add transition */
+    background-color: #fff;
+    transition: border-color 0.2s;
 }
-/* Add focus state for inputs */
+
 form input:focus,
 form select:focus,
 form textarea:focus {
-    border-color: #0056b3; /* Highlight border on focus */
+    border-color: #0056b3;
 }
 
 
 form textarea {
     min-height: 100px;
-    resize: vertical; /* Allow vertical resizing */
+    resize: vertical;
 }
 
 form ul {
@@ -342,10 +321,9 @@ form input[type="checkbox"] {
    vertical-align: middle;
 }
 
-/* === Style Django Form Errors === */
 .errorlist {
-    color: #721c24; /* Error color */
-    background-color: #f8d7da; /* Light error background */
+    color: #721c24;
+    background-color: #f8d7da;
     border: 1px solid #f5c6cb;
     padding: 10px 15px;
     margin: 10px 0;
@@ -355,19 +333,16 @@ form input[type="checkbox"] {
 .errorlist li {
     margin-bottom: 5px;
 }
-/* Style field-specific errors (if not using errorlist) */
-.form-field-error { /* Add this class to p tags or divs containing errors */
+
+.form-field-error {
      color: #721c24;
      font-size: 0.9em;
-     margin-top: -5px; /* Adjust positioning */
+     margin-top: -5px;
      margin-bottom: 10px;
 }
 
-
-/* Submit Button */
 form input[type="submit"],
 .button {
-    /* Existing styles */
     background-color: #007bff;
     color: white;
     padding: 12px 25px;
@@ -375,11 +350,11 @@ form input[type="submit"],
     border-radius: 4px;
     cursor: pointer;
     font-size: 1.1em;
-    transition: background-color 0.3s, transform 0.1s; /* Add transform transition */
+    transition: background-color 0.3s, transform 0.1s;
     text-decoration: none;
     display: inline-block;
     margin-top: 10px;
-    text-align: center; /* Center text */
+    text-align: center;
 }
 
 form input[type="submit"]:hover,
@@ -388,50 +363,40 @@ form input[type="submit"]:hover,
     text-decoration: none;
     color: white;
 }
-form input[type="submit"]:active, /* Add active state */
+form input[type="submit"]:active,
 .button:active {
-    transform: translateY(1px); /* Simple press effect */
+    transform: translateY(1px);
 }
 
-/* === Add Secondary/Destructive Button Styles === */
 .button-secondary {
-    background-color: #6c757d; /* Grey */
+    background-color: #6c757d;
 }
 .button-secondary:hover {
     background-color: #5a6268;
 }
 .button-danger {
-    background-color: #dc3545; /* Red */
+    background-color: #dc3545;
 }
 .button-danger:hover {
     background-color: #c82333;
 }
 
-
-/* Tables */
-.table-container { /* Optional: wrap tables for horizontal scrolling */
+.table-container {
     overflow-x: auto;
     margin: 20px 0;
 }
 .match-table, .availability-table {
     width: 100%;
     border-collapse: collapse;
-    /* margin: 20px 0; Removed if using .table-container */
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    background-color: #fff; /* Ensure table background */
+    background-color: #fff;
 }
 
-/* ... existing table styles ... */
-
-/* === Utility Classes === */
 .text-center { text-align: center; }
 .text-right { text-align: right; }
-.mb-1 { margin-bottom: 0.5rem; } /* Example margin bottom */
-.mt-1 { margin-top: 0.5rem; }    /* Example margin top */
-/* Add more as needed */
+.mb-1 { margin-bottom: 0.5rem; }
+.mt-1 { margin-top: 0.5rem; }
 
-
-/* Announcements and Lists */
 .announcement-list li, .teamsheet-list li, .match-list li {
     border-bottom: 1px solid #eee;
     padding: 10px 0;
@@ -439,16 +404,14 @@ form input[type="submit"]:active, /* Add active state */
 .announcement-list li:last-child, .teamsheet-list li:last-child, .match-list li:last-child {
     border-bottom: none;
 }
-.announcement-list small, .list-meta-info { /* More generic class */
+.announcement-list small, .list-meta-info {
     color: #666;
     display: block;
     margin-top: 5px;
     font-size: 0.9em;
 }
 
-/* Card Style */
 .card {
-    /* Existing styles */
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
@@ -456,11 +419,11 @@ form input[type="submit"]:active, /* Add active state */
     margin-bottom: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
-.card-header { /* Optional card header style */
+.card-header {
     padding: 10px 20px;
     background-color: #f8f9fa;
     border-bottom: 1px solid #e0e0e0;
-    margin: -20px -20px 20px -20px; /* Extend to edges */
+    margin: -20px -20px 20px -20px;
     border-radius: 5px 5px 0 0;
 }
 .card-header h3, .card-header h2 {
@@ -468,8 +431,6 @@ form input[type="submit"]:active, /* Add active state */
     font-size: 1.3em;
 }
 
-
-/* Django Messages Framework */
 .messages {
     list-style: none;
     padding: 0;
@@ -480,32 +441,15 @@ form input[type="submit"]:active, /* Add active state */
     margin-bottom: 10px;
     border-radius: 4px;
     border: 1px solid transparent;
-    position: relative; /* For potential close button */
+    position: relative;
 }
-/* === Add Close Button (Optional, requires JS) === */
-/*
-.message-close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 1.2em;
-    cursor: pointer;
-    color: inherit;
-    opacity: 0.7;
-}
-.message-close:hover {
-    opacity: 1;
-}
-*/
+
 .messages li.success { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
 .messages li.info { background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
 .messages li.warning { background-color: #fff3cd; border-color: #ffeeba; color: #856404; }
 .messages li.error { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
 
 
-/* Responsive Design */
 @media (max-width: 992px) {
     #content-area {
         flex-direction: column;
@@ -523,15 +467,15 @@ form input[type="submit"]:active, /* Add active state */
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        padding: 0; /* Reset padding */
+        padding: 0;
     }
     #sidebar-list li { margin: 0; }
-    #sidebar-list li a { padding: 6px 10px; /* Smaller padding */ } /* Adjust sidebar link padding */
+    #sidebar-list li a { padding: 6px 10px; }
 
     #main-content {
         padding: 20px;
     }
-    #header { padding: 10px 0; /* Use container padding */ }
+    #header { padding: 10px 0; }
     #header > * { padding-left: 15px; padding-right: 15px; }
     #header h1 { font-size: 1.5em; }
 
@@ -545,21 +489,21 @@ form input[type="submit"]:active, /* Add active state */
     #footer {
         flex-direction: column;
         text-align: center;
-        padding: 20px 15px; /* Match container padding */
-        gap: 15px; /* Reduce gap */
+        padding: 20px 15px;
+        gap: 15px;
     }
-    #footer > div { /* Ensure footer sections center text */
+    #footer > div {
         text-align: center;
     }
     #copyright { margin-top: 20px; padding-top: 20px; }
 }
 
 @media (max-width: 576px) {
-    h1 { font-size: 1.8em; } /* Adjust heading sizes for small screens */
+    h1 { font-size: 1.8em; }
     h2 { font-size: 1.5em; }
     h3 { font-size: 1.2em; }
 
-    body { font-size: 15px; } /* Slightly smaller base font */
+    body { font-size: 15px; }
 
     .container { padding-left: 10px; padding-right: 10px; }
     #header > *, #navbar #nav-list, #footer { padding-left: 10px; padding-right: 10px; }
@@ -573,27 +517,26 @@ form input[type="submit"]:active, /* Add active state */
         padding: 8px;
     }
 
-    #header { flex-direction: column; gap: 10px; } /* Stack header items */
+    #header { flex-direction: column; gap: 10px; }
     #header .user-info { margin-top: 5px; }
 }
 
-/* === Print Styles === */
 @media print {
     body {
         background-color: #fff;
         color: #000;
-        font-size: 12pt; /* Adjust for print */
+        font-size: 12pt;
         line-height: 1.4;
     }
     #header, #navbar, #sidebar, #footer, form input[type="submit"], .button, .messages {
-        display: none !important; /* Hide non-content elements */
+        display: none !important;
     }
     .container, #content-area, #main-content {
         width: 100%;
         max-width: none;
         padding: 0;
         margin: 0;
-        display: block; /* Override flex */
+        display: block;
         box-shadow: none;
         border: none;
     }
@@ -601,13 +544,11 @@ form input[type="submit"]:active, /* Add active state */
         color: #000;
         text-decoration: underline;
     }
-    /* Show URL for links in print */
     a[href^="http"]:after {
         content: " (" attr(href) ")";
         font-size: 90%;
         color: #555;
     }
-    /* Prevent page breaks inside tables/cards */
     .card, table, tr, img {
         page-break-inside: avoid;
     }
