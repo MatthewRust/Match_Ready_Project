@@ -116,11 +116,10 @@
 
     </div> {# End .container #}
 
-    {# Load JS at the end for better performance #}
-    <script src="{% static 'js/jquery.min.js' %}"
+    {# Load JS  #}
+    <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
     <script src="{% static 'js/ajax.js' %}"></script>
-    {% block scripts_extra %}{% endblock %} {# Optional: For page-specific JS #}
 
 </body>
 </html>
