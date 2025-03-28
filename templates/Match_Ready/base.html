@@ -9,11 +9,10 @@
     <title>
         Match Ready! - {% block title_block %}Base Title{% endblock %}
     </title>
-    {% block head_extra %}{% endblock %} {# Optional: For page-specific CSS/JS in head #}
 </head>
 
 <body>
-    <div class="container"> {# Main container for centering and max-width #}
+    <div class="container"> {# Main container #}
 
         <!-- Header -->
         <header id="header">
@@ -25,7 +24,6 @@
                     <a href="{% url 'Match_Ready:login' %}">Login</a> | <a href="{% url 'Match_Ready:signup' %}">Sign Up</a>
                 {% endif %}
             </div>
-            {% block header_extra %}{% endblock %} {# Optional: For extra header content #}
         </header>
 
         <!-- Navbar -->
@@ -35,9 +33,7 @@
                 <li><a href="{% url 'Match_Ready:about' %}">About</a></li>
                 <li><a href="{% url 'Match_Ready:contact' %}">Contact Us</a></li>
                 <li><a href="{% url 'Match_Ready:fixtures' %}">All Fixtures</a></li>
-                {# Add other common nav items here #}
             </ul>
-            {% block navbar_extra %}{% endblock %} {# Optional: For extra nav content #}
         </nav>
 
         <!-- Content Area (Sidebar + Main) -->
@@ -46,7 +42,7 @@
             <!-- Sidebar -->
             {% if user.is_authenticated %}
             <aside id="sidebar">
-                <h2>Navigation</h2> {# Title for the sidebar section #}
+                <h2>Navigation</h2> {# Title for the sidebar #}
                 <ul id="sidebar-list">
                         {# Determine user role to show relevant links #}
                         {# Note: This requires fetching the role in a context processor or every view #}
@@ -60,19 +56,14 @@
                             <li><a href="{% url 'Match_Ready:add_match' %}">Create Match</a></li>
                         {% endif %}
 
-                        {# Player specific? #}
-                        {# {% if user_is_player %} ... {% endif %} #}
 
-
-
-                    {% block sidebar_extra_links %}{% endblock %}
                 </ul>
             </aside>
             {% endif %}
 
             <!-- Main Content -->
             <main id="main-content">
-                 {# Display Django Messages Framework messages #}
+                 {# Display Django Messages #}
                 {% if messages %}
                     <ul class="messages">
                         {% for message in messages %}
@@ -81,7 +72,7 @@
                     </ul>
                 {% endif %}
 
-                {# Where child templates will insert their content #}
+                {# Where child templates insert their content #}
                 {% block body_block %}
                     <p>This is the default content from base.html.</p>
                 {% endblock %}
@@ -111,7 +102,6 @@
                  © {% now "Y" %} Match Ready Project. All rights reserved.
                  <p>Made by Group 12E</p> 
             </div>
-            {% block footer_extra %}{% endblock %} {# Optional: For extra footer content #}
         </footer>
 
     </div> {# End .container #}
